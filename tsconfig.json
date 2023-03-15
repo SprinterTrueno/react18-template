@@ -11,6 +11,7 @@
     // react17 以下只能写 react，react17以上可以写 react 或 react-jsx。
     // react：将 JSX 改为等价的对 React.createElement 的调用并生成 js 文件。
     // react-jsx：将 JSX 改为 __jsx 调用并生成 js 文件。详情看上方的参考资料：介绍全新的 JSX 转换。
+    // 由于我们不用 tsc，所以写哪个都可以。
     "jsx": "react-jsx"
   },
   // 指定要包含在程序中的文件名或模式的数组。这些文件名是相对于包含该文件的目录解析的。
