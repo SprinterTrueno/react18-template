@@ -15,9 +15,9 @@ React 项目模板
 我们使用最新的 node 版本，并且使用 pnpm 作为包管理工具。
 
 * OS: Windows 10 家庭中文版 
-* [node](https://nodejs.org/zh-cn/): v18.14.2 
-* [npm](https://nodejs.org/zh-cn/): v8.5.2 
-* [pnpm](https://pnpm.io/zh/): v7.28.0
+* [node](https://nodejs.org/zh-cn/): v18.16.0 
+* [npm](https://nodejs.org/zh-cn/): v9.5.1 
+* [pnpm](https://pnpm.io/zh/): v8.3.0
 
 ### 初始化仓库
 
