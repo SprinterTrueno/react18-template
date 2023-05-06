@@ -214,3 +214,65 @@ react-template
 ├── tsconfig.json
 └── webpack.config.js
 ```
+
+## 四、管理资源
+
+现在我们尝试混合一些其他资源，看看 webpack 如何处理。
+
+### 加载 CSS
+
+为了在 JavaScript 模块中 import 一个 CSS 文件，我们需要安装 style-loader 和 css-loader，并在 module 配置 中添加这些 loader：
+
+* **style-loader**：把 CSS 插入到 DOM 中。
+* **css-loader**：对 @import 和 url() 进行处理，就像 js 解析 import/require() 一样。
+
+```shell
+pnpm add -D style-loader css-loader
+```
+
+webpack.config.js
+
+```javascript
+// ...
+module.exports = {
+  // ...
+  module: {
+    rules: [
+      // ...
+      {
+        test: /\.css$/i,
+        use: ["style-loader", "css-loader"]
+      }
+    ],
+  },
+};
+```
+
+loader 可以链式调用，链中的每个 loader 都将对资源进行转换。链会逆序执行，第一个 loader 将其结果（被转换后的资源）传递给下一个 loader，依此类推。最后，webpack 期望链中最后的 loader 返回 JavaScript。
+
+上述配置项使我们可以在依赖于此样式的 js 文件中 import './style.css'。现在，在此模块执行过程中，含有 CSS 字符串的 `<style>` 标签，将被插入到 html 文件的 `<head>` 中。
+
+让我们来尝试一下，在 src 目录下新建一个 App.css 文件，并将其 import 到我们的 App.tsx 中：
+
+src/App.css
+
+```css
+.text {
+  color: coral;
+}
+```
+
+src/App.tsx
+
+```typescript jsx
+import React from "react";
+import "./App.css";
+
+const App: React.FC = () => {
+  return <div className="text">Hello World!</div>;
+};
+
+export default App;
+```
+
+让我们再次运行 `pnpm webpack`，然后打开我们的 index.html，`Hello World!` 的颜色变为了 coral，我们查看元素也能看到 head 标签中插入了 `<style>.text { color: coral; }</style>`。
