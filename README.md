@@ -276,3 +276,50 @@ export default App;
 ```
 
 让我们再次运行 `pnpm webpack`，然后打开我们的 index.html，`Hello World!` 的颜色变为了 coral，我们查看元素也能看到 head 标签中插入了 `<style>.text { color: coral; }</style>`。
+
+### 加载图像
+
+我们已经成功加载了样式文件，下面让我们加载图像试试。在 webpack 5 中，我们可以使用内置的 Asset Module 来加载图像。
+
+Asset Module 是一种模块类型，它允许使用资源文件（字体，图标等）而无需配置额外 loader。
+
+首先，我们在 src/assets/images 目录下新增一张图片 doge.jpg，并且在 App.tsx 中引入这张图片，同时我们要修改 webpack 的配置文件：
+
+src/App.tsx
+
+```typescript jsx
+import React from "react";
+import doge from "./assets/images/doge.jpg";
+import "./App.css";
+
+const App: React.FC = () => {
+  return (
+    <div>
+      <div className="text">Hello World!</div>
+      <img src={doge} alt="doge"/>
+    </div>
+  );
+};
+
+export default App;
+```
+
+webpack.config.js
+
+```javascript
+// ...
+module.exports = {
+  // ...
+  module: {
+    rules: [
+      // ...
+      {
+        test: /\.(jpe?g|png|gif|svg|bpm)$/i,
+        type: 'asset'
+      },
+    ],
+  },
+};
+```
+
+最后我们执行 `pnpm webpack`，可以看到 dist 文件夹下新增了一个名为 15f87fc5b4b106db6ee7.jpg 的文件，同时我们的图片也在页面上正常加载了。

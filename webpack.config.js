@@ -23,7 +23,11 @@ module.exports = {
       {
         test: /\.css$/i,
         use: ["style-loader", "css-loader"]
-      }
+      },
+      {
+        test: /\.(jpe?g|png|gif|svg|bpm)$/i,
+        type: 'asset'
+      },
     ],
   },
   resolve: {
