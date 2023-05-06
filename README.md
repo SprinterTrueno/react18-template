@@ -6,7 +6,7 @@ React 项目模板
 
 [//]: # (TODO)
 
-## 二、配置基本环境
+## 二、基本环境配置
 
 在开始 webpack 配置之前，我们先初始化一个基本的 React + TS 项目。
 
@@ -98,7 +98,7 @@ react-template
 └── tsconfig.json
 ```
 
-## 三、基础配置
+## 三、起步
 
 现在，我们要把 src 目录下的代码打包并添加到一个 html 文件中，并且打开 html 文件能够正常的展示 `Hello World!`。
 
@@ -124,7 +124,7 @@ module.exports = {
 };
 ```
 
-上面的配置项告诉了 webpack 使用开发模式，以 src/index.tsx 作为入口，将打包的文件输出到根目录下的 dist 文件夹。
+上面的配置项告诉了 webpack 使用开发模式，以 当前目录/src/index.tsx 作为入口，将打包的文件输出到当前目录下的 dist 文件夹。
 
 现在我们执行一下 `pnpm webpack`，webpack 会提示我们需要一个 loader 来加载当前文件（index.tsx），原因是 webpack 只认识 js 和 json，遇到其他类型的文件需要使用 loader 给它翻译一下。比如我们编译 less 文件时需要使用 less-loader 把 less 文件变成 css 文件，再用 css-loader 把 css 文件变成 CommonJS 文件，最终 webpack 得以完成工作。
 
