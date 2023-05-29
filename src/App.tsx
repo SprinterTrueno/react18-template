@@ -1,5 +1,4 @@
 import React from "react";
-// @ts-ignore
 import doge from "./assets/images/doge.jpg";
 import "./App.css";
 

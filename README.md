@@ -322,4 +322,91 @@ module.exports = {
 };
 ```
 
+这里我们导入图片的时候会有一个 ts 报错，提示我们无法找到模块或找不到相应的类型声明。原因是 ts 无法识别非代码资源，因此我们需要新建一个 ts 声明文件来声明 .jpg module，这样 ts 就可以识别非代码资源。d.ts 文件不能随便放置在项目中，这类文件一样需要被 Babel 或者 tsc 编译，所以要放置在 tsconfig.json 中 include 属性所配置的文件夹下。
+
+根据我们的 tsconfig 配置，我们需要在 src 文件夹下新建我们的 d.ts 文件，这里我们直接复制 react 官方写的 d.ts 文件：
+
+src/react-app-env.d.ts
+```typescript
+/// <reference types="node" />
+/// <reference types="react" />
+/// <reference types="react-dom" />
+
+declare namespace NodeJS {
+  interface ProcessEnv {
+    readonly NODE_ENV: 'development' | 'production' | 'test';
+    readonly PUBLIC_URL: string;
+  }
+}
+
+declare module '*.avif' {
+  const src: string;
+  export default src;
+}
+
+declare module '*.bmp' {
+  const src: string;
+  export default src;
+}
+
+declare module '*.gif' {
+  const src: string;
+  export default src;
+}
+
+declare module '*.jpg' {
+  const src: string;
+  export default src;
+}
+
+declare module '*.jpeg' {
+  const src: string;
+  export default src;
+}
+
+declare module '*.png' {
+  const src: string;
+  export default src;
+}
+
+declare module '*.webp' {
+    const src: string;
+    export default src;
+}
+
+declare module '*.svg' {
+  import * as React from 'react';
+
+  export const ReactComponent: React.FunctionComponent<React.SVGProps<
+    SVGSVGElement
+  > & { title?: string }>;
+
+  const src: string;
+  export default src;
+}
+
+declare module '*.module.css' {
+  const classes: { readonly [key: string]: string };
+  export default classes;
+}
+
+declare module '*.module.scss' {
+  const classes: { readonly [key: string]: string };
+  export default classes;
+}
+
+declare module '*.module.sass' {
+  const classes: { readonly [key: string]: string };
+  export default classes;
+}
+```
+
+到了这里，我们会发现 react-app-env.d.ts 的第一行有一个报错：TS2688: Cannot find type definition file for 'node'.这是由于我们没有显式安装 node 类型声明库导致的，我们根据提示安装一下即可：
+
+```shell
+pnpm add -D @types/node
+```
+
+完成这一步之后，我们可以发现报错已经没有了，同时我们引入图片的报错也已经消失了。
+
 最后我们执行 `pnpm webpack`，可以看到 dist 文件夹下新增了一个名为 15f87fc5b4b106db6ee7.jpg 的文件，同时我们的图片也在页面上正常加载了。
