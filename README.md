@@ -98,7 +98,9 @@ react-template
 └── tsconfig.json
 ```
 
-## 三、起步
+## 三、基础功能配置
+
+### 加载 TS/TSX
 
 现在，我们要把 src 目录下的代码打包并添加到一个 html 文件中，并且打开 html 文件能够正常的展示 `Hello World!`。
 
@@ -215,10 +217,6 @@ react-template
 └── webpack.config.js
 ```
 
-## 四、管理资源
-
-现在我们尝试混合一些其他资源，看看 webpack 如何处理。
-
 ### 加载 CSS
 
 为了在 JavaScript 模块中 import 一个 CSS 文件，我们需要安装 style-loader 和 css-loader，并在 module 配置 中添加这些 loader：
@@ -275,9 +273,24 @@ const App: React.FC = () => {
 export default App;
 ```
 
-让我们再次运行 `pnpm webpack`，然后打开我们的 index.html，`Hello World!` 的颜色变为了 coral，我们查看元素也能看到 head 标签中插入了 `<style>.text { color: coral; }</style>`。
+让我们再次运行 `pnpm webpack`，然后打开我们的 index.html，`Hello World!` 的颜色变为了 coral，我们查看元素也能看到 head 标签中插入了 `<style>.text { color: coral; }</style>`。此刻你的项目看起来应该如下：
 
-### 加载图像
+```text
+react-template
+├── dist
+│   ├── index.html
+│   └── main.js
+├── package.json
+├── pnpm-lock.yaml
+├── src
+│   ├── App.css
+│   ├── App.tsx
+│   └── index.tsx
+├── tsconfig.json
+└── webpack.config.js
+```
+
+### 加载 Images
 
 我们已经成功加载了样式文件，下面让我们加载图像试试。在 webpack 5 中，我们可以使用内置的 Asset Module 来加载图像。
 
@@ -410,3 +423,25 @@ pnpm add -D @types/node
 完成这一步之后，我们可以发现报错已经没有了，同时我们引入图片的报错也已经消失了。
 
 最后我们执行 `pnpm webpack`，可以看到 dist 文件夹下新增了一个名为 15f87fc5b4b106db6ee7.jpg 的文件，同时我们的图片也在页面上正常加载了。
+
+其他类型资源的配置方法大体相同，不再做配置，如有需要可自行查阅文档。此刻你的项目看起来应该如下：
+
+```text
+react-template     
+├── dist
+│   ├── 15f87fc5b4b106db6ee7.jpg
+│   ├── index.html
+│   └── main.js
+├── package.json
+├── pnpm-lock.yaml
+├── src
+│   ├── App.css
+│   ├── App.tsx
+│   ├── assets
+│   │   └── images
+│   │       └── doge.jpg
+│   ├── index.tsx
+│   └── react-app-env.d.ts
+├── tsconfig.json
+└── webpack.config.js
+```
