@@ -84,7 +84,7 @@ tsconfig.json
 }
 ```
 
-这里可能有同志会问都使用 tsx 了为什么不安装 typescript。我们执行 `pnpm add -D typesciript` 安装的是 typescript 编译器，不是 typescript 语言。我们并不需要使用 typescript 编译器（至少目前不需要）去做编译打包的工作，所以我们不需要安装 typescript 编译器。
+这里可能有同志会问都使用 tsx 了为什么不安装 typescript。我们执行 `pnpm add -D typesciript` 安装的是 typescript 编译器，不是 typescript 语言。我们只需要静态类型检查，并不需要它去做编译打包的工作（至少目前不需要），所以我们使用 IDE 自带的版本即可。当然，想体验 typescript 最新特性的也可以安装。 
 
 现在我们的基本环境已经准备好了，接下来可以配置 webpack 了。此刻你的项目看起来应该如下：
 
