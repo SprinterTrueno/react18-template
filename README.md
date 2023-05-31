@@ -126,7 +126,7 @@ module.exports = {
 };
 ```
 
-上面的配置项告诉了 webpack 使用开发模式，以 当前目录/src/index.tsx 作为入口，将打包的文件输出到当前目录下的 dist 文件夹。
+上面的配置项告诉了 webpack 使用开发模式，以 `当前目录/src/index.tsx` 作为入口，将打包的文件输出到 `当前目录/dist` 文件夹。
 
 现在我们执行一下 `pnpm webpack`，webpack 会提示我们需要一个 loader 来加载当前文件（index.tsx），原因是 webpack 只认识 js 和 json，遇到其他类型的文件需要使用 loader 给它翻译一下。比如我们编译 less 文件时需要使用 less-loader 把 less 文件变成 css 文件，再用 css-loader 把 css 文件变成 CommonJS 文件，最终 webpack 得以完成工作。
 
@@ -445,3 +445,43 @@ react-template
 ├── tsconfig.json
 └── webpack.config.js
 ```
+
+## 四、开发环境
+
+### 使用 source map
+
+当 webpack 打包源代码时，可能会很难追踪到 error(错误) 和 warning(警告) 在源代码中的原始位置。我们在 App.tsx 中制造一些错误来看看效果。
+
+App.tsx
+
+```typescript jsx
+import React from "react";
+import doge from "./assets/images/doge.jpg";
+import "./App.css";
+
+const App: React.FC = () => {
+  console.logs("我是中国DotA的希望");
+
+  return (
+    <div>
+      <div className="text">Hello World!</div>
+      <img src={doge} alt="doge"/>
+    </div>
+  );
+};
+
+export default App;
+```
+
+注意看，我们在第六行写了错误代码，我们现在执行 `pnpm webpack` 并且打开浏览器控制台，得到了这样的错误信息：console.logs is not a function at App (App.tsx:13:11)。这明显不是我们错误代码所在的地方，为了更容易地追踪 error 和 warning，JavaScript 提供了 source maps 功能，可以将编译后的代码映射回原始源代码。
+
+webpack.config.js
+```javascript
+// ...
+module.exports = {
+  // ...
+  devtool: "source-map"
+};
+```
+
+现在我们再尝试一下，控制台现在显示的错误为：console.logs is not a function at App (App.tsx:6:11)。现在我们得到了准确的错误信息，这会非常有助于我们快速定位问题所在的位置。
