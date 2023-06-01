@@ -414,7 +414,7 @@ declare module '*.module.sass' {
 }
 ```
 
-到了这里，我们会发现 react-app-env.d.ts 的第一行有一个报错：TS2688: Cannot find type definition file for 'node'.这是由于我们没有显式安装 node 类型声明库导致的，我们根据提示安装一下即可：
+到了这里，我们会发现 react-app-env.d.ts 的第一行有一个报错：TS2688: Cannot find type definition file for 'node'. 这是由于我们没有显式安装 node 类型声明库导致的，我们根据提示安装一下即可：
 
 ```shell
 pnpm add -D @types/node
@@ -485,3 +485,85 @@ module.exports = {
 ```
 
 现在我们再尝试一下，控制台现在显示的错误为：console.logs is not a function at App (App.tsx:6:11)。现在我们得到了准确的错误信息，这会非常有助于我们快速定位问题所在的位置。
+
+### 使用 webpack-dev-server
+
+在每次编译代码时，手动运行 pnpm webpack 会显得很麻烦，我们可以借助 webpack-dev-server 在代码发生变化后自动编译代码。
+
+安装 webpack-dev-server
+
+```shell
+pnpm add -D webpack-dev-server
+```
+
+为了方便我们执行命令，我们添加一些 script。
+
+package.json
+```json5
+{
+  // ...
+  "scripts": {
+    "start": "webpack serve",
+    "build": "webpack"
+  }
+}
+```
+
+修改配置文件，添加 dev server 配置。
+
+webpack.config.js
+```javascript
+// ...
+module.exports = {
+  // ...
+  devServer: {
+    static: path.resolve(__dirname, "dist")
+  }
+};
+```
+
+以上配置告知 webpack-dev-server，将 dist 目录（默认是 public 目录）下的文件 serve 到 localhost:8080（默认端口号为8080） 下，可以理解为在模拟项目部署时的那个后端服务容器（如：nginx、Tomcat等）。
+
+我们现在执行 `pnpm start`，然后打开 localhost:8080 就可以看到我们的页面。如果你更改任何源文件并保存它们，web server 将在编译代码后自动重新加载。
+
+现在我们修改 css 文件，页面样式可以在不刷新浏览器的情况实时生效，因为此时样式都在 style 标签里面，style-loader 做了替换样式的热替换功能。但是修改 App.tsx 浏览器会自动刷新后再显示修改后的内容，我们想要的不是刷新浏览器，而是在不需要刷新浏览器的前提下模块热更新，并且能够保留 react 组件的状态。
+
+我们可以借助 @pmmmwh/react-refresh-webpack-plugin 插件来实现，但是该插件依赖于 react-refresh，所以我们需要安装一下两个依赖：
+
+```shell
+pnpm add -D @pmmmwh/react-refresh-webpack-plugin react-refresh
+```
+
+我们再次修改配置文件，添加插件。
+
+webpack.config.js
+```javascript
+// ...
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
+
+module.exports = {
+  // ...
+  module: {
+    rules: [
+      {
+        test: /\.tsx?$/i,
+        include: /src/,
+        loader: "babel-loader",
+        options: {
+          presets: [
+            "@babel/preset-env",
+            "@babel/preset-react",
+            "@babel/preset-typescript"
+          ],
+          plugins: ["react-refresh/babel"],
+        }
+      },
+    ]
+  },
+  plugins: [
+    new ReactRefreshWebpackPlugin()
+  ]
+};
+```
+
+我们再次启动开发服务器，修改 App.tsx 会发现在不刷新浏览器的情况下，页面内容进行了热更新。

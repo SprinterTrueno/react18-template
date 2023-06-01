@@ -4,6 +4,7 @@
   "description": "React项目模板",
   "private": true,
   "scripts": {
+    "start": "webpack serve",
     "build": "webpack",
     "tree": "treee -I node_modules"
   },
@@ -16,6 +17,7 @@
     "@babel/preset-env": "^7.22.2",
     "@babel/preset-react": "^7.22.3",
     "@babel/preset-typescript": "^7.21.5",
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.10",
     "@types/node": "^20.2.5",
     "@types/react": "^18.2.7",
     "@types/react-dom": "^18.2.4",
@@ -24,9 +26,11 @@
     "css-loader": "^6.8.1",
     "cz-conventional-changelog": "^3.3.0",
     "cz-conventional-changelog-zh": "^0.0.2",
+    "react-refresh": "^0.14.0",
     "style-loader": "^3.3.3",
     "webpack": "^5.84.1",
-    "webpack-cli": "^5.1.1"
+    "webpack-cli": "^5.1.1",
+    "webpack-dev-server": "^4.15.0"
   },
   "config": {
     "commitizen": {
