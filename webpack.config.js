@@ -34,7 +34,8 @@ module.exports = {
   },
   resolve: {
     // webpack 会尝试按顺序解析，所以应该尽可能减少匹配次数，以提高性能。
-    extensions: [".js", ".ts", ".tsx", ".jsx"]
+    extensions: [".js", ".ts", ".tsx", ".jsx"],
+    alias: { "@": path.resolve(__dirname, "src") }
   },
   devtool: "source-map",
   devServer: {

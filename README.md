@@ -448,6 +448,61 @@ react-template
 
 ## 四、开发环境
 
+### 路径别名
+
+我们经常使用路径别名，来确保模块引入变得更简单。例如使用 @ 来代替 src 文件夹：
+
+index.tsx
+```typescript jsx
+import React from "react";
+import ReactDOM from "react-dom/client";
+// import App from "./App";
+import App from "@/App";
+
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
+
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+```
+
+这个时候我们可以看到已经有 TS 报错了：Cannot find module '@/App' or its corresponding type declarations（找不到模块“@/App”或其相应的类型声明）.
+
+这里我们需要修改一下 tsconfig：
+
+tsconfig.json
+```json5
+{
+  "compilerOptions": {
+    // ...
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  },
+  "include": ["src"]
+}
+```
+
+注意，这里我们只是解决了 TS 报错，webpack 同样的也不知道 @ 是什么，我们还需要修改 webpack.config.js：
+
+webpack.config.js
+
+```javascript
+// ...
+module.exports = {
+  // ...
+  resolve: {
+    // ...
+    alias: { "@": path.resolve(__dirname, "src") }
+  }
+};
+```
+
+我们重新构建项目，页面正常地展示了 App.tsx。
+
 ### 使用 source map
 
 当 webpack 打包源代码时，可能会很难追踪到 error(错误) 和 warning(警告) 在源代码中的原始位置。我们在 App.tsx 中制造一些错误来看看效果。
