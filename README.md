@@ -446,6 +446,86 @@ react-template
 └── webpack.config.js
 ```
 
+### 设置 HtmlWebpackPlugin
+
+webpack 最终构建好的静态资源需要引入到一个 html 文件中，这样才能在浏览器中运行。我们之前手动的在 dist 文件夹下维护了一个 html 文件，如果我们更改了我们的一个入口起点的名称，甚至添加了一个新的入口，webpack 会在构建时重新命名生成的 bundle，但是我们的 index.html 文件仍然引用旧的名称。[HtmlWebpackPlugin](https://github.com/jantimon/html-webpack-plugin) 可以帮助我们解决这个问题。
+
+首先安装插件，并且调整 webpack.config.js 文件：
+
+```shell
+pnpm add -D html-webpack-plugin
+```
+
+webpack.config.js
+
+```javascript
+// ...
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+
+module.exports = {
+  // ...
+  plugins: [
+    new HtmlWebpackPlugin()
+  ]
+}
+```
+
+我们重新构建一下，可以看到 dist 文件夹下生成了一个 index.html 文件，但是打开它页面并不能正常展示。我们来看一看这个 html 文件的内容：
+
+dist/index.html
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Webpack App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"><script defer src="main.js"></script></head>
+<body>
+</body>
+</html>
+```
+
+这个 html 文件中缺少了我们的 root 节点，我们需要给 HtmlWebpackPlugin 提供一个模板，我们在根目录下新建一个 public 文件夹，并在其中新增一个 index.html 文件作为我们的模板。
+
+public/index.html
+
+```html
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+<div id="root"></div>
+</body>
+</html>
+```
+
+模板创建好了，我们还要还要为 HtmlWebpackPlugin 指定我们的模板。
+
+webpack.config.js
+
+```javascript
+// ...
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+
+module.exports = {
+  // ...
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: "public/index.html"
+    })
+  ]
+}
+```
+
+我们再次构建并打开 dist 文件夹下的 index.html，页面正常打开！
+
 ## 四、开发环境
 
 ### 路径别名
@@ -605,17 +685,14 @@ module.exports = {
         include: /src/,
         loader: "babel-loader",
         options: {
-          presets: [
-            "@babel/preset-env",
-            "@babel/preset-react",
-            "@babel/preset-typescript"
-          ],
+          // ...
           plugins: ["react-refresh/babel"],
         }
       },
     ]
   },
   plugins: [
+    // ...
     new ReactRefreshWebpackPlugin()
   ]
 };

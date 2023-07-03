@@ -1,4 +1,5 @@
 const path = require("path");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 
 module.exports = {
@@ -43,6 +44,9 @@ module.exports = {
     static: path.resolve(__dirname, "dist")
   },
   plugins: [
+    new HtmlWebpackPlugin({
+      template: "public/index.html"
+    }),
     new ReactRefreshWebpackPlugin()
   ]
 };
