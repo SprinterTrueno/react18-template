@@ -14,7 +14,6 @@ React 项目模板
 
 我们使用最新的 node 版本，并且使用 pnpm 作为包管理工具。
 
-* OS: Windows 10 家庭中文版 
 * [node](https://nodejs.org/zh-cn/): v18.16.0
 * [pnpm](https://pnpm.io/zh/): v8.4.0
 
@@ -26,7 +25,7 @@ React 项目模板
 
 ### 搭建项目
 
-首先，我们需要安装 React。
+首先，我们需要安装 [React](https://react.dev)。
 
 ```shell
 pnpm add react react-dom && pnpm add -D @types/react @types/react-dom
@@ -104,7 +103,7 @@ react-template
 
 现在，我们要把 src 目录下的代码打包并添加到一个 html 文件中，并且打开 html 文件能够正常的展示 `Hello World!`。
 
-第一步当然是安装 webpack 啦！
+第一步当然是安装 [webpack](https://webpack.docschina.org) 啦！
 
 ```shell
 pnpm add -D webpack webpack-cli
@@ -219,7 +218,7 @@ react-template
 
 ### 加载 CSS
 
-为了在 JavaScript 模块中 import 一个 CSS 文件，我们需要安装 style-loader 和 css-loader，并在 module 配置 中添加这些 loader：
+为了在 JavaScript 模块中 import 一个 CSS 文件，我们需要安装 [style-loader](https://github.com/webpack-contrib/style-loader) 和 [css-loader](https://github.com/webpack-contrib/css-loader)，并在 module 配置 中添加这些 loader：
 
 * **style-loader**：把 CSS 插入到 DOM 中。
 * **css-loader**：对 @import 和 url() 进行处理，就像 js 解析 import/require() 一样。
@@ -292,7 +291,7 @@ react-template
 
 ### 加载 Images
 
-我们已经成功加载了样式文件，下面让我们加载图像试试。在 webpack 5 中，我们可以使用内置的 Asset Module 来加载图像。
+我们已经成功加载了样式文件，下面让我们加载图像试试。在 webpack 5 中，我们可以使用内置的 [Asset Module](https://webpack.docschina.org/guides/asset-modules) 来加载图像。
 
 Asset Module 是一种模块类型，它允许使用资源文件（字体，图标等）而无需配置额外 loader。
 
@@ -480,7 +479,9 @@ dist/index.html
 <head>
   <meta charset="utf-8">
   <title>Webpack App</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1"><script defer src="main.js"></script></head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script defer src="main.js"></script>
+</head>
 <body>
 </body>
 </html>
@@ -557,7 +558,7 @@ tsconfig.json
 {
   "compilerOptions": {
     // ...
-    "baseUrl": "./",
+    "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
     }
@@ -566,7 +567,7 @@ tsconfig.json
 }
 ```
 
-注意，这里我们只是解决了 TS 报错，webpack 同样的也不知道 @ 是什么，我们还需要修改 webpack.config.js：
+注意，这里我们只是解决了 TS 报错，webpack 同样的也不知道 `@` 是什么，我们还需要修改 webpack.config.js：
 
 webpack.config.js
 
@@ -623,7 +624,7 @@ module.exports = {
 
 ### 使用 webpack-dev-server
 
-在每次编译代码时，手动运行 pnpm webpack 会显得很麻烦，我们可以借助 webpack-dev-server 在代码发生变化后自动编译代码。
+在每次编译代码时，手动运行 pnpm webpack 会显得很麻烦，我们可以借助 [webpack-dev-server](https://github.com/webpack/webpack-dev-server) 在代码发生变化后自动编译代码。
 
 安装 webpack-dev-server
 
@@ -663,7 +664,7 @@ module.exports = {
 
 现在我们修改 css 文件，页面样式可以在不刷新浏览器的情况实时生效，因为此时样式都在 style 标签里面，style-loader 做了替换样式的热替换功能。但是修改 App.tsx 浏览器会自动刷新后再显示修改后的内容，我们想要的不是刷新浏览器，而是在不需要刷新浏览器的前提下模块热更新，并且能够保留 react 组件的状态。
 
-我们可以借助 @pmmmwh/react-refresh-webpack-plugin 插件来实现，但是该插件依赖于 react-refresh，所以我们需要安装一下两个依赖：
+我们可以借助 [@pmmmwh/react-refresh-webpack-plugin](https://github.com/pmmmwh/react-refresh-webpack-plugin) 插件来实现，但是该插件依赖于 react-refresh，所以我们需要安装一下两个依赖：
 
 ```shell
 pnpm add -D @pmmmwh/react-refresh-webpack-plugin react-refresh
