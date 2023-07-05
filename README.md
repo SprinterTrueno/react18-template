@@ -527,6 +527,28 @@ module.exports = {
 
 我们再次构建并打开 dist 文件夹下的 index.html，页面正常打开！
 
+### 清理 dist 文件夹
+
+你可能已经注意到，由于遗留了之前的代码示例，我们的 dist 文件夹显得相当杂乱。webpack 将生成文件并放置在 dist 文件夹中，但是它不会追踪哪些文件是实际在项目中用到的。
+
+通常比较推荐的做法是，在每次构建前清理 /dist 文件夹，这样只会生成用到的文件。让我们使用 `output.clean` 配置项实现这个需求。
+
+webpack.config.js
+
+```javascript
+// ...
+
+module.exports = {
+  // ...
+  output: {
+    // ...
+    clean: true
+  },
+};
+```
+
+现在，执行 `pnpm build`，检查 dist 文件夹。如果一切顺利，现在只会看到构建后生成的文件，而没有旧文件！
+
 ## 四、开发环境
 
 ### 路径别名
