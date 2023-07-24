@@ -4,8 +4,8 @@
   "description": "React项目模板",
   "private": true,
   "scripts": {
-    "start": "webpack serve",
-    "build": "webpack",
+    "start": "webpack serve --env NODE_ENV=development",
+    "build": "webpack --env NODE_ENV=production",
     "tree": "treee -I node_modules"
   },
   "dependencies": {

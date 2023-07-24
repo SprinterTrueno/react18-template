@@ -531,7 +531,7 @@ module.exports = {
 
 你可能已经注意到，由于遗留了之前的代码示例，我们的 dist 文件夹显得相当杂乱。webpack 将生成文件并放置在 dist 文件夹中，但是它不会追踪哪些文件是实际在项目中用到的。
 
-通常比较推荐的做法是，在每次构建前清理 /dist 文件夹，这样只会生成用到的文件。让我们使用 `output.clean` 配置项实现这个需求。
+通常比较推荐的做法是，在每次构建前清理 dist 文件夹，这样只会生成用到的文件。让我们使用 `output.clean` 配置项实现这个需求。
 
 webpack.config.js
 
@@ -722,3 +722,95 @@ module.exports = {
 ```
 
 我们再次启动开发服务器，修改 App.tsx 会发现在不刷新浏览器的情况下，页面内容进行了热更新。
+
+## 五、环境变量
+
+### 命令行参数
+
+development(开发环境) 和 production(生产环境) 这两个环境下的构建目标存在着巨大差异。在开发环境中，我们需要强大的 source map 和一个有着 live reloading(实时重新加载) 或 hot module replacement(热模块替换) 能力的 localhost server。而生产环境目标则转移至其他方面，关注点在于压缩 bundle、更轻量的 source map、资源优化等，通过这些优化方式改善加载时间。想要消除 webpack.config.js 在 开发环境 和 生产环境 之间的差异，我们需要环境变量(environment variable)。
+
+webpack 命令行 环境配置 的 --env 参数，可以允许我们传入任意数量的环境变量。而在 webpack.config.js 中可以访问到这些环境变量。例如，--env production 或 --env goal=local。
+
+我们先修改一下我们的脚本：
+
+package.json
+```json5
+{
+  // ...
+  "scripts": {
+    "start": "webpack serve --env development",
+    "build": "webpack --env NODE_ENV=production"
+  },
+}
+```
+
+接着，我们在 webpack.config.js 中接收我们的环境变量：
+
+webpack.config.js
+```javascript
+// ...
+module.exports = (env) => {
+  console.log(env);
+  return {
+    // ...
+  };
+};
+```
+
+我们依次执行我们的脚本，env 会打印出如下结果：
+
+```text
+pnpm start：{ WEBPACK_SERVE: true, development: true }
+pnpm build：{ WEBPACK_BUNDLE: true, WEBPACK_BUILD: true, NODE_ENV: 'production' }
+```
+
+### 指定 mode
+
+许多 library 通过与 process.env.NODE_ENV 等环境变量关联，以决定 library 中应该引用哪些内容（比如 React）。从 webpack v4 开始, 指定 mode 会自动地配置 [DefinePlugin](https://webpack.docschina.org/plugins/define-plugin)（允许在 编译时 将你代码中的变量替换为其他值或表达式）：
+
+package.json
+```json5
+{
+  // ...
+  "scripts": {
+    "start": "webpack serve --env NODE_ENV=development",
+    "build": "webpack --env NODE_ENV=production"
+  },
+}
+```
+
+webpack.config.js
+```javascript
+// ...
+module.exports = (env) => {
+  const { NODE_ENV } = env;
+  
+  return {
+    // ...
+    mode: NODE_ENV 
+  };
+};
+```
+
+index.tsx
+```typescript jsx
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+
+if (process.env.NODE_ENV === "production") {
+  console.log("生产环境");
+} else {
+  console.log("开发环境");
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
+
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+```
+
+我们依次执行命令，可以看到控制台中打印出了我们当前的所处环境。
