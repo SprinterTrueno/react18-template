@@ -24,7 +24,7 @@ module.exports = (env) => {
               "@babel/preset-react",
               "@babel/preset-typescript"
             ],
-            plugins: ["react-refresh/babel"],
+            // plugins: ["react-refresh/babel"],
           }
         },
         {
@@ -51,7 +51,7 @@ module.exports = (env) => {
       new HtmlWebpackPlugin({
         template: "public/index.html"
       }),
-      new ReactRefreshWebpackPlugin()
+      // new ReactRefreshWebpackPlugin()
     ]
   };
 };

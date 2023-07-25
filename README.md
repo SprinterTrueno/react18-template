@@ -779,6 +779,8 @@ package.json
 }
 ```
 
+这里要把 [webpack-dev-server](#使用-webpack-dev-server) 相关的配置临时注释掉，因为 production 模式不支持其相关配置。
+
 webpack.config.js
 ```javascript
 // ...
@@ -787,7 +789,30 @@ module.exports = (env) => {
   
   return {
     // ...
-    mode: NODE_ENV 
+    mode: NODE_ENV,
+    module: {
+      rules: [
+        {
+          test: /\.tsx?$/i,
+          include: /src/,
+          loader: "babel-loader",
+          options: {
+            presets: [
+              "@babel/preset-env",
+              "@babel/preset-react",
+              "@babel/preset-typescript"
+            ],
+            // plugins: ["react-refresh/babel"]
+          }
+        }
+      ]
+    },
+    plugins: [
+      new HtmlWebpackPlugin({
+        template: "public/index.html"
+      }),
+      // new ReactRefreshWebpackPlugin()
+    ]
   };
 };
 ```
