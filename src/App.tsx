@@ -6,7 +6,7 @@ const App: React.FC = () => {
   return (
     <div>
       <div className="text">Hello World!</div>
-      <img src={doge} alt="doge"/>
+      <img src={doge} alt="doge" />
     </div>
   );
 };

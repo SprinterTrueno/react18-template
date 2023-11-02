@@ -4,7 +4,7 @@ React 项目模板
 
 ## 一、前言
 
-[//]: # (TODO)
+[//]: # "TODO"
 
 ## 二、基本环境配置
 
@@ -14,8 +14,8 @@ React 项目模板
 
 我们使用最新的 node 版本，并且使用 pnpm 作为包管理工具。
 
-* [node](https://nodejs.org/zh-cn/): v18.16.0
-* [pnpm](https://pnpm.io/zh/): v8.4.0
+- [node](https://nodejs.org/zh-cn/): v18.16.0
+- [pnpm](https://pnpm.io/zh/): v8.4.0
 
 ### 初始化仓库
 
@@ -37,7 +37,7 @@ tsconfig.json
 
 ```json5
 {
-  "include": ["src"]
+  include: ["src"]
 }
 ```
 
@@ -48,7 +48,9 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 
-const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
+const root = ReactDOM.createRoot(
+  document.getElementById("root") as HTMLElement
+);
 
 root.render(
   <React.StrictMode>
@@ -78,12 +80,12 @@ tsconfig.json
   // ...
   compilerOptions: {
     allowSyntheticDefaultImports: true,
-    jsx: "react-jsx",
-  },
+    jsx: "react-jsx"
+  }
 }
 ```
 
-这里可能有同志会问都使用 tsx 了为什么不安装 typescript。我们执行 `pnpm add -D typesciript` 安装的是 typescript 编译器，不是 typescript 语言。我们只需要静态类型检查，并不需要它去做编译打包的工作（至少目前不需要），所以我们使用 IDE 自带的版本即可。当然，想体验 typescript 最新特性的也可以安装。 
+这里可能有同志会问都使用 tsx 了为什么不安装 typescript。我们执行 `pnpm add -D typesciript` 安装的是 typescript 编译器，不是 typescript 语言。我们只需要静态类型检查，并不需要它去做编译打包的工作（至少目前不需要），所以我们使用 IDE 自带的版本即可。当然，想体验 typescript 最新特性的也可以安装。
 
 现在我们的基本环境已经准备好了，接下来可以配置 webpack 了。此刻你的项目看起来应该如下：
 
@@ -120,8 +122,8 @@ module.exports = {
   mode: "development",
   entry: path.resolve(__dirname, "src/index.tsx"),
   output: {
-    path: path.resolve(__dirname, "dist"),
-  },
+    path: path.resolve(__dirname, "dist")
+  }
 };
 ```
 
@@ -131,11 +133,11 @@ module.exports = {
 
 由于我们之前不打算使用 tsc（typescript 编译器），所以我们选择 [Babel](https://www.babeljs.cn) 作为我们的编译器，这里我们需要用到如下几个库：
 
-* **babel-loader**：允许使用 Babel 和 webpack 转译 JavaScript 文件。
-* **@babel/core**：Babel 的核心编译库。
-* **@babel/preset-env**：Babel 转译过程中的预设。主要用于将 ECMAScript 2015+ 语法编写的代码转换为向后兼容的 JavaScript 语法，以便能够运行在当前和旧版本的浏览器或其他环境中。
-* **@babel/preset-react**：根据不同的 runtime，调用 React.createElement 或 __jsx 来转换 jsx。
-* **@babel/preset-typescript**：将 ts 语法转换为 js 语法。
+- **babel-loader**：允许使用 Babel 和 webpack 转译 JavaScript 文件。
+- **@babel/core**：Babel 的核心编译库。
+- **@babel/preset-env**：Babel 转译过程中的预设。主要用于将 ECMAScript 2015+ 语法编写的代码转换为向后兼容的 JavaScript 语法，以便能够运行在当前和旧版本的浏览器或其他环境中。
+- **@babel/preset-react**：根据不同的 runtime，调用 React.createElement 或 \_\_jsx 来转换 jsx。
+- **@babel/preset-typescript**：将 ts 语法转换为 js 语法。
 
 我们执行以下命令安装我们需要用到的库，并更新 webpack.config.js。
 
@@ -159,12 +161,12 @@ module.exports = {
           presets: [
             "@babel/preset-env",
             "@babel/preset-react",
-            "@babel/preset-typescript",
-          ],
-        },
-      },
-    ],
-  },
+            "@babel/preset-typescript"
+          ]
+        }
+      }
+    ]
+  }
 };
 ```
 
@@ -177,8 +179,8 @@ webpack.config.js
 module.exports = {
   // ...
   resolve: {
-    extensions: [".js", ".ts", ".tsx", ".jsx"],
-  },
+    extensions: [".js", ".ts", ".tsx", ".jsx"]
+  }
 };
 ```
 
@@ -220,8 +222,8 @@ react-template
 
 为了在 JavaScript 模块中 import 一个 CSS 文件，我们需要安装 [style-loader](https://github.com/webpack-contrib/style-loader) 和 [css-loader](https://github.com/webpack-contrib/css-loader)，并在 module 配置 中添加这些 loader：
 
-* **style-loader**：把 CSS 插入到 DOM 中。
-* **css-loader**：对 @import 和 url() 进行处理，就像 js 解析 import/require() 一样。
+- **style-loader**：把 CSS 插入到 DOM 中。
+- **css-loader**：对 @import 和 url() 进行处理，就像 js 解析 import/require() 一样。
 
 ```shell
 pnpm add -D style-loader css-loader
@@ -240,8 +242,8 @@ module.exports = {
         test: /\.css$/i,
         use: ["style-loader", "css-loader"]
       }
-    ],
-  },
+    ]
+  }
 };
 ```
 
@@ -308,7 +310,7 @@ const App: React.FC = () => {
   return (
     <div>
       <div className="text">Hello World!</div>
-      <img src={doge} alt="doge"/>
+      <img src={doge} alt="doge" />
     </div>
   );
 };
@@ -327,10 +329,10 @@ module.exports = {
       // ...
       {
         test: /\.(jpe?g|png|gif|svg|bpm)$/i,
-        type: 'asset'
-      },
-    ],
-  },
+        type: "asset"
+      }
+    ]
+  }
 };
 ```
 
@@ -339,6 +341,7 @@ module.exports = {
 根据我们的 tsconfig 配置，我们需要在 src 文件夹下新建我们的 d.ts 文件，这里我们直接复制 react 官方写的 d.ts 文件：
 
 src/react-app-env.d.ts
+
 ```typescript
 /// <reference types="node" />
 /// <reference types="react" />
@@ -346,68 +349,68 @@ src/react-app-env.d.ts
 
 declare namespace NodeJS {
   interface ProcessEnv {
-    readonly NODE_ENV: 'development' | 'production' | 'test';
+    readonly NODE_ENV: "development" | "production" | "test";
     readonly PUBLIC_URL: string;
   }
 }
 
-declare module '*.avif' {
+declare module "*.avif" {
   const src: string;
   export default src;
 }
 
-declare module '*.bmp' {
+declare module "*.bmp" {
   const src: string;
   export default src;
 }
 
-declare module '*.gif' {
+declare module "*.gif" {
   const src: string;
   export default src;
 }
 
-declare module '*.jpg' {
+declare module "*.jpg" {
   const src: string;
   export default src;
 }
 
-declare module '*.jpeg' {
+declare module "*.jpeg" {
   const src: string;
   export default src;
 }
 
-declare module '*.png' {
+declare module "*.png" {
   const src: string;
   export default src;
 }
 
-declare module '*.webp' {
-    const src: string;
-    export default src;
+declare module "*.webp" {
+  const src: string;
+  export default src;
 }
 
-declare module '*.svg' {
-  import * as React from 'react';
+declare module "*.svg" {
+  import * as React from "react";
 
-  export const ReactComponent: React.FunctionComponent<React.SVGProps<
-    SVGSVGElement
-  > & { title?: string }>;
+  export const ReactComponent: React.FunctionComponent<
+    React.SVGProps<SVGSVGElement> & { title?: string }
+  >;
 
   const src: string;
   export default src;
 }
 
-declare module '*.module.css' {
+declare module "*.module.css" {
   const classes: { readonly [key: string]: string };
   export default classes;
 }
 
-declare module '*.module.scss' {
+declare module "*.module.scss" {
   const classes: { readonly [key: string]: string };
   export default classes;
 }
 
-declare module '*.module.sass' {
+declare module "*.module.sass" {
   const classes: { readonly [key: string]: string };
   export default classes;
 }
@@ -426,7 +429,7 @@ pnpm add -D @types/node
 其他类型资源的配置方法大体相同，不再做配置，如有需要可自行查阅文档。此刻你的项目看起来应该如下：
 
 ```text
-react-template     
+react-template
 ├── dist
 │   ├── 15f87fc5b4b106db6ee7.jpg
 │   ├── index.html
@@ -463,10 +466,8 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
   // ...
-  plugins: [
-    new HtmlWebpackPlugin()
-  ]
-}
+  plugins: [new HtmlWebpackPlugin()]
+};
 ```
 
 我们重新构建一下，可以看到 dist 文件夹下生成了一个 index.html 文件，但是打开它页面并不能正常展示。我们来看一看这个 html 文件的内容：
@@ -476,14 +477,13 @@ dist/index.html
 ```html
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  <title>Webpack App</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script defer src="main.js"></script>
-</head>
-<body>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <title>Webpack App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script defer src="main.js"></script>
+  </head>
+  <body></body>
 </html>
 ```
 
@@ -494,16 +494,18 @@ public/index.html
 ```html
 <!DOCTYPE html>
 <html lang="zh">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport"
-        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Document</title>
-</head>
-<body>
-<div id="root"></div>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
 </html>
 ```
 
@@ -522,7 +524,7 @@ module.exports = {
       template: "public/index.html"
     })
   ]
-}
+};
 ```
 
 我们再次构建并打开 dist 文件夹下的 index.html，页面正常打开！
@@ -543,7 +545,7 @@ module.exports = {
   output: {
     // ...
     clean: true
-  },
+  }
 };
 ```
 
@@ -556,13 +558,16 @@ module.exports = {
 我们经常使用路径别名，来确保模块引入变得更简单。例如使用 @ 来代替 src 文件夹：
 
 index.tsx
+
 ```typescript jsx
 import React from "react";
 import ReactDOM from "react-dom/client";
 // import App from "./App";
 import App from "@/App";
 
-const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
+const root = ReactDOM.createRoot(
+  document.getElementById("root") as HTMLElement
+);
 
 root.render(
   <React.StrictMode>
@@ -576,16 +581,17 @@ root.render(
 这里我们需要修改一下 tsconfig：
 
 tsconfig.json
+
 ```json5
 {
-  "compilerOptions": {
+  compilerOptions: {
     // ...
-    "baseUrl": ".",
-    "paths": {
+    baseUrl: ".",
+    paths: {
       "@/*": ["src/*"]
     }
   },
-  "include": ["src"]
+  include: ["src"]
 }
 ```
 
@@ -623,7 +629,7 @@ const App: React.FC = () => {
   return (
     <div>
       <div className="text">Hello World!</div>
-      <img src={doge} alt="doge"/>
+      <img src={doge} alt="doge" />
     </div>
   );
 };
@@ -634,6 +640,7 @@ export default App;
 注意看，我们在第六行写了错误代码，我们现在执行 `pnpm webpack` 并且打开浏览器控制台，得到了这样的错误信息：console.logs is not a function at App (App.tsx:13:11)。这明显不是我们错误代码所在的地方，为了更容易地追踪 error 和 warning，JavaScript 提供了 source maps 功能，可以将编译后的代码映射回原始源代码。
 
 webpack.config.js
+
 ```javascript
 // ...
 module.exports = {
@@ -657,12 +664,13 @@ pnpm add -D webpack-dev-server
 为了方便我们执行命令，我们添加一些 script。
 
 package.json
+
 ```json5
 {
   // ...
-  "scripts": {
-    "start": "webpack serve",
-    "build": "webpack"
+  scripts: {
+    start: "webpack serve",
+    build: "webpack"
   }
 }
 ```
@@ -670,6 +678,7 @@ package.json
 修改配置文件，添加 dev server 配置。
 
 webpack.config.js
+
 ```javascript
 // ...
 module.exports = {
@@ -680,7 +689,7 @@ module.exports = {
 };
 ```
 
-以上配置告知 webpack-dev-server，将 dist 目录（默认是 public 目录）下的文件 serve 到 localhost:8080（默认端口号为8080） 下，可以理解为在模拟项目部署时的那个后端服务容器（如：nginx、Tomcat等）。
+以上配置告知 webpack-dev-server，将 dist 目录（默认是 public 目录）下的文件 serve 到 localhost:8080（默认端口号为 8080） 下，可以理解为在模拟项目部署时的那个后端服务容器（如：nginx、Tomcat 等）。
 
 我们现在执行 `pnpm start`，然后打开 localhost:8080 就可以看到我们的页面。如果你更改任何源文件并保存它们，web server 将在编译代码后自动重新加载。
 
@@ -695,9 +704,10 @@ pnpm add -D @pmmmwh/react-refresh-webpack-plugin react-refresh
 我们再次修改配置文件，添加插件。
 
 webpack.config.js
+
 ```javascript
 // ...
-const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
+const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 
 module.exports = {
   // ...
@@ -709,9 +719,9 @@ module.exports = {
         loader: "babel-loader",
         options: {
           // ...
-          plugins: ["react-refresh/babel"],
+          plugins: ["react-refresh/babel"]
         }
-      },
+      }
     ]
   },
   plugins: [
@@ -734,19 +744,21 @@ webpack 命令行 环境配置 的 --env 参数，可以允许我们传入任意
 我们先修改一下我们的脚本：
 
 package.json
+
 ```json5
 {
   // ...
-  "scripts": {
-    "start": "webpack serve --env development",
-    "build": "webpack --env NODE_ENV=production"
-  },
+  scripts: {
+    start: "webpack serve --env development",
+    build: "webpack --env NODE_ENV=production"
+  }
 }
 ```
 
 接着，我们在 webpack.config.js 中接收我们的环境变量：
 
 webpack.config.js
+
 ```javascript
 // ...
 module.exports = (env) => {
@@ -769,24 +781,26 @@ pnpm build：{ WEBPACK_BUNDLE: true, WEBPACK_BUILD: true, NODE_ENV: 'production'
 许多 library 通过与 process.env.NODE_ENV 等环境变量关联，以决定 library 中应该引用哪些内容（比如 React）。从 webpack v4 开始, 指定 mode 会自动地配置 [DefinePlugin](https://webpack.docschina.org/plugins/define-plugin)（允许在 编译时 将你代码中的变量替换为其他值或表达式）：
 
 package.json
+
 ```json5
 {
   // ...
-  "scripts": {
-    "start": "webpack serve --env NODE_ENV=development",
-    "build": "webpack --env NODE_ENV=production"
-  },
+  scripts: {
+    start: "webpack serve --env NODE_ENV=development",
+    build: "webpack --env NODE_ENV=production"
+  }
 }
 ```
 
 这里要把 [webpack-dev-server](#使用-webpack-dev-server) 相关的配置临时注释掉，因为 production 模式不支持其相关配置。
 
 webpack.config.js
+
 ```javascript
 // ...
 module.exports = (env) => {
   const { NODE_ENV } = env;
-  
+
   return {
     // ...
     mode: NODE_ENV,
@@ -801,7 +815,7 @@ module.exports = (env) => {
               "@babel/preset-env",
               "@babel/preset-react",
               "@babel/preset-typescript"
-            ],
+            ]
             // plugins: ["react-refresh/babel"]
           }
         }
@@ -810,7 +824,7 @@ module.exports = (env) => {
     plugins: [
       new HtmlWebpackPlugin({
         template: "public/index.html"
-      }),
+      })
       // new ReactRefreshWebpackPlugin()
     ]
   };
@@ -818,6 +832,7 @@ module.exports = (env) => {
 ```
 
 index.tsx
+
 ```typescript jsx
 import React from "react";
 import ReactDOM from "react-dom/client";
@@ -829,7 +844,9 @@ if (process.env.NODE_ENV === "production") {
   console.log("开发环境");
 }
 
-const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
+const root = ReactDOM.createRoot(
+  document.getElementById("root") as HTMLElement
+);
 
 root.render(
   <React.StrictMode>
@@ -850,13 +867,13 @@ webpack.config.js
 // ...
 module.exports = (env) => {
   const { NODE_ENV } = env;
-  
+
   return {
     // ...
     output: {
       clean: true,
       filename: "[name].[contenthash].js",
-      path: path.resolve(__dirname, "dist"),
+      path: path.resolve(__dirname, "dist")
     }
   };
 };

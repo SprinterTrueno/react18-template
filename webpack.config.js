@@ -1,6 +1,6 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
+const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 
 module.exports = (env) => {
   const { NODE_ENV } = env;
@@ -11,7 +11,7 @@ module.exports = (env) => {
     output: {
       clean: true,
       filename: "[name].[contenthash].js",
-      path: path.resolve(__dirname, "dist"),
+      path: path.resolve(__dirname, "dist")
     },
     module: {
       rules: [
@@ -24,7 +24,7 @@ module.exports = (env) => {
               "@babel/preset-env",
               "@babel/preset-react",
               "@babel/preset-typescript"
-            ],
+            ]
             // plugins: ["react-refresh/babel"],
           }
         },
@@ -34,8 +34,8 @@ module.exports = (env) => {
         },
         {
           test: /\.(jpe?g|png|gif|svg|bpm)$/i,
-          type: 'asset'
-        },
+          type: "asset"
+        }
       ]
     },
     resolve: {
@@ -51,7 +51,7 @@ module.exports = (env) => {
     plugins: [
       new HtmlWebpackPlugin({
         template: "public/index.html"
-      }),
+      })
       // new ReactRefreshWebpackPlugin()
     ]
   };
