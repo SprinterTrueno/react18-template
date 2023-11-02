@@ -675,22 +675,6 @@ package.json
 }
 ```
 
-修改配置文件，添加 dev server 配置。
-
-webpack.config.js
-
-```javascript
-// ...
-module.exports = {
-  // ...
-  devServer: {
-    static: path.resolve(__dirname, "dist")
-  }
-};
-```
-
-以上配置告知 webpack-dev-server，将 dist 目录（默认是 public 目录）下的文件 serve 到 localhost:8080（默认端口号为 8080） 下，可以理解为在模拟项目部署时的那个后端服务容器（如：nginx、Tomcat 等）。
-
 我们现在执行 `pnpm start`，然后打开 localhost:8080 就可以看到我们的页面。如果你更改任何源文件并保存它们，web server 将在编译代码后自动重新加载。
 
 现在我们修改 css 文件，页面样式可以在不刷新浏览器的情况实时生效，因为此时样式都在 style 标签里面，style-loader 做了替换样式的热替换功能。但是修改 App.tsx 浏览器会自动刷新后再显示修改后的内容，我们想要的不是刷新浏览器，而是在不需要刷新浏览器的前提下模块热更新，并且能够保留 react 组件的状态。
@@ -700,8 +684,6 @@ module.exports = {
 ```shell
 pnpm add -D @pmmmwh/react-refresh-webpack-plugin react-refresh
 ```
-
-我们再次修改配置文件，添加插件。
 
 webpack.config.js
 
