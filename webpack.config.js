@@ -9,8 +9,9 @@ module.exports = (env) => {
     mode: NODE_ENV,
     entry: path.resolve(__dirname, "src/index.tsx"),
     output: {
+      clean: true,
+      filename: "[name].[contenthash].js",
       path: path.resolve(__dirname, "dist"),
-      clean: true
     },
     module: {
       rules: [
