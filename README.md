@@ -893,3 +893,52 @@ module.exports = (env) => {
 ```
 
 我们再次构建，可以看到我们的构建产物中出现了了一个名为 vendors.js 的文件，这个就是我们 node_modules 里面的模块，而我们的业务代码则在 main.js 中。这样我们改动业务代码时，vendors.js 的哈希值不会发生变化，浏览器可以使用缓存来加载 vendors.js，只需要重新请求 main.js。
+
+## 七、优化构建结果
+
+### bundle 分析
+
+webpack-bundle-analyzer 是一个 bundle 分析插件，使用交互式可缩放树形图可视化 bundle 的大小。通过该插件可以对 bundle 进行观察和分析，方便我们对不完美的地方进行针对性优化。
+
+```shell
+pnpm add -D webpack-bundle-analyzer
+```
+
+// webpack.config.js
+
+```javascript
+// ...
+const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
+
+module.exports = (env) => {
+  const { NODE_ENV } = env;
+
+  return {
+    // ...
+    plugins: [new BundleAnalyzerPlugin()]
+  };
+};
+```
+
+我们再次构建我们的项目，会发现构建结束后自动打开了 127.0.0.1:8888 显示了 bundle 报告。如果你想保存这个结果也可以生成一个 html 文件：
+
+```javascript
+// ...
+const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
+
+module.exports = (env) => {
+  const { NODE_ENV } = env;
+
+  return {
+    // ...
+    plugins: [
+      new BundleAnalyzerPlugin({
+        analyzerMode: "static",
+        reportFilename: path.resolve(__dirname, "bundle-analyze-result.html")
+      })
+    ]
+  };
+};
+```
+
+这样配置项说明我们将在当前目录下生成一个名为 bundle-analyze-result 的 html 文件，我们再次构建就可以看到根目录下看到它。

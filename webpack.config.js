@@ -1,6 +1,7 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
+const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 
 module.exports = (env) => {
   const { NODE_ENV } = env;
@@ -47,8 +48,12 @@ module.exports = (env) => {
     plugins: [
       new HtmlWebpackPlugin({
         template: "public/index.html"
-      })
+      }),
       // new ReactRefreshWebpackPlugin()
+      new BundleAnalyzerPlugin({
+        analyzerMode: "static",
+        reportFilename: path.resolve(__dirname, "bundle-analyze-result.html")
+      })
     ],
     optimization: {
       splitChunks: {
