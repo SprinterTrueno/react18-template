@@ -49,6 +49,12 @@ module.exports = (env) => {
         template: "public/index.html"
       })
       // new ReactRefreshWebpackPlugin()
-    ]
+    ],
+    optimization: {
+      splitChunks: {
+        chunks: "all",
+        name: "vendors"
+      }
+    }
   };
 };

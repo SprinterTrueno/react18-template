@@ -476,7 +476,7 @@ dist/index.html
 
 ```html
 <!DOCTYPE html>
-<html>
+<html lang="zh">
   <head>
     <meta charset="utf-8" />
     <title>Webpack App</title>
@@ -843,6 +843,10 @@ root.render(
 
 webpack 在打包之后，会生成一个可部署的 /dist 目录，一旦 /dist 目录中的内容部署到服务器上，客户端（通常是浏览器）就能够访问此服务器以获取站点及其资源。但是为了减少网络请求的数量，提高网页加载速度，并减轻服务器的负载，浏览器会使用缓存。然而，如果在部署新版本时不更改资源的文件名，浏览器可能会认为它没有被更新，就会使用它的缓存版本。由于缓存的存在，当你需要获取新的代码时，就会显得很棘手。我们现在要通过配置，让文件内容发生改变之后，浏览器可以请求到新的文件。
 
+### 输出文件的文件名
+
+更改 output.filename 中的 substitutions（可替换模板字符串） 以定义输出文件的名称。其中，[contenthash] substitution 将根据资源内容创建唯一哈希值。当资源内容发生变化时，[contenthash] 也会发生变化。
+
 webpack.config.js
 
 ```javascript
@@ -862,3 +866,30 @@ module.exports = (env) => {
 ```
 
 调整配置之后，我们再次进行构建，会发现我们的输出文件的名称增加了哈希值，只要我们修改文件，输出产物的哈希值就会发生变化，浏览器就会发现我们的文件进行了更新。
+
+### 代码分离
+
+代码分离是 webpack 中最引人注目的特性之一。此特性能够把代码分离到不同的 bundle 中，然后可以按需加载或并行加载这些文件。代码分离可以用于获取更小的 bundle、控制资源加载优先级，如果使用合理，会极大减小加载时间。
+
+一般三方包的代码变化频率很小，我们可以把 node_modules 中的代码单独打包，这样我们的三方包的 hash 值不会改变，浏览器就可以将其缓存起来，减少加载时间。
+
+webpack.config.js
+
+```javascript
+// ...
+module.exports = (env) => {
+  const { NODE_ENV } = env;
+
+  return {
+    // ...
+    optimization: {
+      splitChunks: {
+        chunks: "all",
+        name: "vendors"
+      }
+    }
+  };
+};
+```
+
+我们再次构建，可以看到我们的构建产物中出现了了一个名为 vendors.js 的文件，这个就是我们 node_modules 里面的模块，而我们的业务代码则在 main.js 中。这样我们改动业务代码时，vendors.js 的哈希值不会发生变化，浏览器可以使用缓存来加载 vendors.js，只需要重新请求 main.js。
