@@ -1,17 +1,21 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 
 module.exports = (env) => {
   const { NODE_ENV } = env;
+
+  const DEVELOPMENT_ENV = NODE_ENV === "development";
+  const PRODUCTION_ENV = NODE_ENV === "production";
 
   return {
     mode: NODE_ENV,
     entry: path.resolve(__dirname, "src/index.tsx"),
     output: {
       clean: true,
-      filename: "[name].[contenthash].js",
+      filename: "[name].[contenthash:8].js",
       path: path.resolve(__dirname, "dist")
     },
     module: {
@@ -25,13 +29,18 @@ module.exports = (env) => {
               "@babel/preset-env",
               "@babel/preset-react",
               "@babel/preset-typescript"
-            ]
-            // plugins: ["react-refresh/babel"],
+            ],
+            plugins: [
+              DEVELOPMENT_ENV && require.resolve("react-refresh/babel")
+            ].filter(Boolean)
           }
         },
         {
           test: /\.css$/i,
-          use: ["style-loader", "css-loader"]
+          use: [
+            DEVELOPMENT_ENV ? "style-loader" : MiniCssExtractPlugin.loader,
+            "css-loader"
+          ]
         },
         {
           test: /\.(jpe?g|png|gif|svg|bpm)$/i,
@@ -49,12 +58,16 @@ module.exports = (env) => {
       new HtmlWebpackPlugin({
         template: "public/index.html"
       }),
-      // new ReactRefreshWebpackPlugin()
+      DEVELOPMENT_ENV && new ReactRefreshWebpackPlugin(),
+      PRODUCTION_ENV &&
+        new MiniCssExtractPlugin({
+          filename: "[name].[contenthash:8].css"
+        }),
       new BundleAnalyzerPlugin({
         analyzerMode: "static",
         reportFilename: path.resolve(__dirname, "bundle-analyze-result.html")
       })
-    ],
+    ].filter(Boolean),
     optimization: {
       splitChunks: {
         chunks: "all",

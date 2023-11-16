@@ -942,3 +942,64 @@ module.exports = (env) => {
 ```
 
 这样配置项说明我们将在当前目录下生成一个名为 bundle-analyze-result 的 html 文件，我们再次构建就可以看到根目录下看到它。
+
+### 抽取 css
+
+在开发环境我们希望 CSS 嵌入在 style 标签里面，方便样式热替换，但打包时我们希望把 CSS 单独抽离出来，可以使浏览器并行加载 CSS 文件和其他文件，提高页面加载速度和性能，同时可以利用浏览器缓存机制，减少网络请求。
+
+[mini-css-extract-plugin](https://github.com/webpack-contrib/mini-css-extract-plugin) 可以帮助我们做这件事，它可以为每个包含 CSS 的 JS 文件创建一个 CSS 文件，同时支持 CSS 和 SourceMaps 的按需加载。首先我们需要安装它：
+
+```shell
+pnpm add -D mini-css-extract-plugin
+```
+
+由于我们在构建的时候才会用到它，所以我们需要区分环境。我们顺便把之前临时禁用掉的 [webpack-dev-server](#使用-webpack-dev-server) 相关配置也加上。
+
+webpack.config.js
+
+```javascript
+// ...
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+
+module.exports = (env) => {
+  const { NODE_ENV } = env;
+
+  const DEVELOPMENT_ENV = NODE_ENV === "development";
+  const PRODUCTION_ENV = NODE_ENV === "production";
+
+  return {
+    // ...
+    module: {
+      rules: [
+        {
+          test: /\.tsx?$/i,
+          include: /src/,
+          loader: "babel-loader",
+          options: {
+            // ...
+            plugins: [
+              DEVELOPMENT_ENV && require.resolve("react-refresh/babel")
+            ].filter(Boolean)
+          }
+        },
+        {
+          test: /\.css$/i,
+          use: [
+            DEVELOPMENT_ENV ? "style-loader" : MiniCssExtractPlugin.loader,
+            "css-loader"
+          ]
+        }
+      ]
+    },
+    plugins: [
+      DEVELOPMENT_ENV && new ReactRefreshWebpackPlugin(),
+      PRODUCTION_ENV &&
+        new MiniCssExtractPlugin({
+          filename: "[name].[contenthash:8].css"
+        })
+    ].filter(Boolean)
+  };
+};
+```
+
+大功告成，我们来看一下效果。在开发模式下，我们的样式在 style 标签中。在生产模式下，我们的 dist 文件夹中多了一个 main.css 文件。
