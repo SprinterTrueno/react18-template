@@ -2,6 +2,7 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 
 module.exports = (env) => {
@@ -65,10 +66,12 @@ module.exports = (env) => {
         }),
       new BundleAnalyzerPlugin({
         analyzerMode: "static",
-        reportFilename: path.resolve(__dirname, "bundle-analyze-result.html")
+        reportFilename: path.resolve(__dirname, "bundle-analyze-result.html"),
+        openAnalyzer: false
       })
     ].filter(Boolean),
     optimization: {
+      minimizer: [new CssMinimizerPlugin()],
       splitChunks: {
         chunks: "all",
         name: "vendors"

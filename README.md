@@ -1003,3 +1003,30 @@ module.exports = (env) => {
 ```
 
 大功告成，我们来看一下效果。在开发模式下，我们的样式在 style 标签中。在生产模式下，我们的 dist 文件夹中多了一个 main.css 文件。
+
+### 压缩 css
+
+我们刚才抽离出来的 main.css 文件是没有经过压缩的，为了进一步减小我们 css 文件的体积，我们需要借助 [css-minimizer-webpack-plugin](https://github.com/webpack-contrib/css-minimizer-webpack-plugin)。
+
+```shell
+pnpm add -D css-minimizer-webpack-plugin
+```
+
+webpack.config.js
+
+```javascript
+// ...
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+
+module.exports = () => {
+  return {
+    // ...
+    optimization: {
+      // ...
+      minimizer: [new CssMinimizerPlugin()]
+    }
+  };
+};
+```
+
+再次执行 `pnpm build` 就可以看到 css 已经被压缩了。
