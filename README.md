@@ -1058,3 +1058,69 @@ module.exports = () => {
 ```
 
 现在我们就可以同时压缩 css 和 js 了。
+
+## 八、优化构建速度
+
+### 构建耗时分析
+
+首先我们需要知道构建的时间都花在了什么地方，才能优化我们的构建速度。[speed-measure-webpack-plugin](https://github.com/stephencookdev/speed-measure-webpack-plugin) 可以帮助我们做到这件事，我们首先安装依赖：
+
+```shell
+pnpm add -D speed-measure-webpack-plugin
+```
+
+由于我们不需要每次都统计构建耗时，所以我们在新增一个 webpack.speedMeasure.js 专门用来统计耗时，同时增加我们的 script：
+
+webpack.speedMeasure.js
+
+```javascript
+const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
+const webpackConfig = require("./webpack.config");
+
+module.exports = (env) => {
+  const smp = new SpeedMeasurePlugin();
+
+  const config = smp.wrap(webpackConfig(env));
+
+  return config;
+};
+```
+
+package.json
+
+```json5
+{
+  scripts: {
+    // ...
+    speedMeasure: "webpack --config webpack.speedMeasure.js --env NODE_ENV=production"
+  }
+}
+```
+
+我们来执行一下 `pnpm speedMeasure`，会发现出现了一个错误，提示我们没有添加 `mini-css-extract-plugin`，这是由于它们目前不兼容，我们需要改造一下我们的配置文件。
+
+webpack.speedMeasure.js
+
+```javascript
+const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
+const webpackConfig = require("./webpack.config");
+
+module.exports = (env) => {
+  const smp = new SpeedMeasurePlugin();
+
+  const MiniCssExtractPluginIndex = webpackConfig(env).plugins.findIndex(
+    (item) => {
+      return item.constructor.name === "MiniCssExtractPlugin";
+    }
+  );
+  const MiniCssExtractPlugin =
+    webpackConfig(env).plugins[MiniCssExtractPluginIndex];
+
+  const config = smp.wrap(webpackConfig(env));
+  config.plugins[MiniCssExtractPluginIndex] = MiniCssExtractPlugin;
+
+  return config;
+};
+```
+
+这样操作可以解决刚才的报错，但是统计不到 MiniCssExtractPlugin 的数据。我们再次执行 `pnpm speedMeasure`，可以在控制台中看到总耗时、Plugins 耗时和 Loaders 耗时。
