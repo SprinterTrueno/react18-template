@@ -3,6 +3,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
 const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 
 module.exports = (env) => {
@@ -71,7 +72,21 @@ module.exports = (env) => {
       })
     ].filter(Boolean),
     optimization: {
-      minimizer: [new CssMinimizerPlugin()],
+      minimizer: [
+        new CssMinimizerPlugin(),
+        new TerserPlugin({
+          /*// 多线程，默认值为true：os.cpus().length - 1。
+          parallel: true,
+          // 提取注释，默认值为true，这将提取所有注释，将其保存在名为LICENSE.txt的文件中，设置为false则不提取注释。
+          extractComments: true,
+          terserOptions: {
+            compress: {
+              // 禁用控制台输出
+              drop_console: true
+            }
+          }*/
+        })
+      ],
       splitChunks: {
         chunks: "all",
         name: "vendors"

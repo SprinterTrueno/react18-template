@@ -1030,3 +1030,31 @@ module.exports = () => {
 ```
 
 再次执行 `pnpm build` 就可以看到 css 已经被压缩了。
+
+### 压缩 js
+
+当我们的 mode 为 production 时，webpack 会使用内置插件 [terser-webpack-plugin](https://github.com/webpack-contrib/terser-webpack-plugin) 来压缩 js，但是我们上面配置了 optimization.minimizer 之后 webpack 就会以我们的配置为准，不再压缩 js，所以我们现在需要重新配置压缩 js。
+
+虽然 webpack 已经内置了 terser-webpack-plugin，但是我们需要显示的引用它，所以我们还是手动需要安装一下。
+
+```shell
+pnpm add -D terser-webpack-plugin
+```
+
+webpack.config.js
+
+```javascript
+// ...
+const TerserPlugin = require("terser-webpack-plugin");
+
+module.exports = () => {
+  return {
+    // ...
+    optimization: {
+      minimizer: [new CssMinimizerPlugin(), new TerserPlugin()]
+    }
+  };
+};
+```
+
+现在我们就可以同时压缩 css 和 js 了。
