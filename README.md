@@ -1107,19 +1107,17 @@ const webpackConfig = require("./webpack.config");
 
 module.exports = (env) => {
   const smp = new SpeedMeasurePlugin();
+  const config = webpackConfig(env);
 
-  const MiniCssExtractPluginIndex = webpackConfig(env).plugins.findIndex(
-    (item) => {
-      return item.constructor.name === "MiniCssExtractPlugin";
-    }
-  );
-  const MiniCssExtractPlugin =
-    webpackConfig(env).plugins[MiniCssExtractPluginIndex];
+  const MiniCssExtractPluginIndex = config.plugins.findIndex((item) => {
+    return item.constructor.name === "MiniCssExtractPlugin";
+  });
+  const MiniCssExtractPlugin = config.plugins[MiniCssExtractPluginIndex];
 
-  const config = smp.wrap(webpackConfig(env));
-  config.plugins[MiniCssExtractPluginIndex] = MiniCssExtractPlugin;
+  const smpConfig = smp.wrap(config);
+  smpConfig.plugins[MiniCssExtractPluginIndex] = MiniCssExtractPlugin;
 
-  return config;
+  return smpConfig;
 };
 ```
 
