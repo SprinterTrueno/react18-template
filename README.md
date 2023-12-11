@@ -1122,3 +1122,20 @@ module.exports = (env) => {
 ```
 
 这样操作可以解决刚才的报错，但是统计不到 MiniCssExtractPlugin 的数据。我们再次执行 `pnpm speedMeasure`，可以在控制台中看到总耗时、Plugins 耗时和 Loaders 耗时。
+
+### 持久化缓存
+
+缓存生成的 webpack 模块和 chunk，来改善构建速度。
+
+webpack.config.js
+
+```javascript
+module.exports = () => {
+  return {
+    // ...
+    cache: { type: "filesystem" }
+  };
+};
+```
+
+我们现在执行 `pnpm build` 两次，第一次耗时 8067ms，第二次仅耗时 642ms。缓存的存储位置在 node_modules/.cache/webpack，里面又区分了 development 和 production 缓存。

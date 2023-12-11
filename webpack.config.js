@@ -56,6 +56,7 @@ module.exports = (env) => {
       alias: { "@": path.resolve(__dirname, "src") }
     },
     devtool: "source-map",
+    cache: { type: "filesystem" },
     plugins: [
       new HtmlWebpackPlugin({
         template: "public/index.html"
@@ -75,9 +76,9 @@ module.exports = (env) => {
       minimizer: [
         new CssMinimizerPlugin(),
         new TerserPlugin({
-          /*// 多线程，默认值为true：os.cpus().length - 1。
+          /*// 多线程，默认值为 true：os.cpus().length - 1。
           parallel: true,
-          // 提取注释，默认值为true，这将提取所有注释，将其保存在名为LICENSE.txt的文件中，设置为false则不提取注释。
+          // 提取注释，默认值为 true，这将提取所有注释，将其保存在名为 LICENSE.txt 的文件中，设置为 false 则不提取注释。
           extractComments: true,
           terserOptions: {
             compress: {
