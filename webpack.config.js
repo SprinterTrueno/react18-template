@@ -24,7 +24,6 @@ module.exports = (env) => {
       rules: [
         {
           test: /\.tsx?$/i,
-          include: /src/,
           loader: "babel-loader",
           options: {
             presets: [

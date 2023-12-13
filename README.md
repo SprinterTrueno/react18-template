@@ -135,9 +135,9 @@ module.exports = {
 
 - **babel-loader**：允许使用 Babel 和 webpack 转译 JavaScript 文件。
 - **@babel/core**：Babel 的核心编译库。
-- **@babel/preset-env**：Babel 转译过程中的预设。主要用于将 ECMAScript 2015+ 语法编写的代码转换为向后兼容的 JavaScript 语法，以便能够运行在当前和旧版本的浏览器或其他环境中。
-- **@babel/preset-react**：根据不同的 runtime，调用 React.createElement 或 \_\_jsx 来转换 jsx。
-- **@babel/preset-typescript**：将 ts 语法转换为 js 语法。
+- **@babel/preset-env**：Babel 转译过程中的预设，主要用于将 ECMAScript 2015+ 语法编写的代码转换为向后兼容的 JavaScript 语法，以便能够运行在当前和旧版本的浏览器或其他环境中，如果确定项目不会运行在旧版本浏览器中可以不用。
+- **@babel/preset-react**：Babel 转译过程中的预设，根据不同的 runtime，调用 React.createElement 或 \_\_jsx 来转换 jsx。
+- **@babel/preset-typescript**：Babel 转译过程中的预设，将 ts 语法转换为 js 语法。
 
 我们执行以下命令安装我们需要用到的库，并更新 webpack.config.js。
 
@@ -155,7 +155,6 @@ module.exports = {
     rules: [
       {
         test: /\.tsx?$/i,
-        include: /src/,
         loader: "babel-loader",
         options: {
           presets: [
@@ -169,6 +168,8 @@ module.exports = {
   }
 };
 ```
+
+上面的配置项会让 babel-loader 加载所有 ts/tsx 文件（所以这里也包括你代码中使用的三方库），然后按照 preset-typescript --> preset-react --> preset-env 顺序使用预设。
 
 我们再次执行 `pnpm webpack`，依然有报错信息，这里我们重点看这句话：no extension. D:\xxx\react-template\src\App doesn't exist .js。webpack 提示我们没有扩展，在 src 目录下找不到 App.js。这是因为我们引入 App.tsx 的时候没有写文件后缀名导致的，webpack 默认会尝试按顺序解析以 .js、.json、.wasm 的文件，所以我们需要告诉 webpack 引入模块时不带后缀名它应该怎么去解析，让我们再增加一些配置。
 
@@ -697,7 +698,6 @@ module.exports = {
     rules: [
       {
         test: /\.tsx?$/i,
-        include: /src/,
         loader: "babel-loader",
         options: {
           // ...
@@ -790,7 +790,6 @@ module.exports = (env) => {
       rules: [
         {
           test: /\.tsx?$/i,
-          include: /src/,
           loader: "babel-loader",
           options: {
             presets: [
@@ -973,7 +972,6 @@ module.exports = (env) => {
       rules: [
         {
           test: /\.tsx?$/i,
-          include: /src/,
           loader: "babel-loader",
           options: {
             // ...
