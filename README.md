@@ -1137,3 +1137,34 @@ module.exports = () => {
 ```
 
 我们现在执行 `pnpm build` 两次，第一次耗时 8067ms，第二次仅耗时 642ms。缓存的存储位置在 node_modules/.cache/webpack，里面又区分了 development 和 production 缓存。
+
+### 缩小 loader 作用范围
+
+合理配置 loader 的作用范围，减少不必要的 loader 解析。一般三方库都是已经处理好的，不需要再次使用 loader 去解析，使用 include 和 exclude 两个配置项，可以实现这个功能：
+
+- include：引入符合以下任何条件的模块。
+- exclude：排除所有符合条件的模块，优先级更高。
+
+我们之前编译 ts/tsx 文件时就没有限定模块，我们现在只需要编译自己写的代码即可，由于我们所有的代码都在 src 目录下，所以我们可以写`exclude: /node_modules/` 或者 `include: /src/`。
+
+webpack.config.js
+
+```javascript
+module.exports = (env) => {
+  return {
+    module: {
+      rules: [
+        {
+          test: /\.tsx?$/i,
+          loader: "babel-loader",
+          exclude: /node_modules/
+          // include: /src/
+          // ...
+        }
+      ]
+    }
+  };
+};
+```
+
+我们来对比一下优化前后的构建时间，优化前的时间为 9762ms，优化后的时间为 7128ms，由于我们目前所使用三方库比较少，实际项目中效果会更加明显。
