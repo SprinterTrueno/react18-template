@@ -1059,6 +1059,8 @@ module.exports = () => {
 
 ## 八、优化构建速度
 
+**不要为了很小的性能收益，牺牲应用程序的质量！** 注意，在大多数情况下，优化代码质量比构建性能更重要。
+
 ### 构建耗时分析
 
 首先我们需要知道构建的时间都花在了什么地方，才能优化我们的构建速度。[speed-measure-webpack-plugin](https://github.com/stephencookdev/speed-measure-webpack-plugin) 可以帮助我们做到这件事，我们首先安装依赖：
@@ -1212,3 +1214,28 @@ module.exports = (env) => {
   };
 };
 ```
+
+### devtool
+
+不同的 devtool 设置会导致性能差异。对于开发环境，通常希望更快速的 source map，需要添加到 bundle 中以增加体积为代价，但是对于生产环境，则希望更精准的 source map，需要从 bundle 中分离并独立存在。
+
+devtool 的命名规则为 `/^(inline-|hidden-|eval-)?(nosources-)?(cheap-(module-)?)?source-map$/`
+
+- **source map 文件**：当 devtool 设置为 `source-map` 时，webpack 会生成一个 source map 文件，并在打包后的 bundle.js 文件最后添加一行注释，指向 source map 文件。
+- **不生成 source map 文件**：`false | none` 这两种方式不会生成 bundle.js.map 文件，也不会在 bundle.js 引入 bundle.js.map 。
+- **内联 source-map**：除了直接生成 source map 文件，还可以将 source map 内容直接内联到编译后的 bundle.js 中，有三种方式来配置 devtool。
+
+  - eval：development 模式下的默认值（没有定义 devtool 时），通过 eval 函数来执行文件内容，并在最后增加指向该内容所在的源文件地址。
+  - eval-source-map：生成的 source map 以 base64 编码的形式添加到 eval 函数中。
+  - inline-source-map：生成的 source map 以 base64 编码放置在打包后文件的最后面。
+
+  因为 source map 会占据较大空间，将 source map 内联到 bundle.js 文件中，会使打包后文件体积变大。
+
+- **报错精确到行**：以上的报错信息都是精确到列的，而精确到行的话，只会告知这一行中有错误。这样编译速度会稍快一点，同时也会生成 source map 文件。
+  - cheap-source-map：只精确到行，对于有 loader 的情况，会不够准确。
+  - cheap-module-source-map：只精确到行，可以很好的处理有 loader 的情况。
+- **不显示源码**：既生成 sourcemap，又不显示源代码。
+  - hidden-source-map：与 devtool 定义成 source-map 一样都会生成 source map 文件，只是在打包后文件 bundle.js 中，没有对 source-map 的引用，如果手动加入，也是会生效的。
+  - nosources-source-map：会生成 source map，但是生成的 source map 只有错误信息的提示，不会生成源代码文件， 会在控制台告诉错误的内容及文件，但是点击文件名的时候看不到源码。
+
+开发环境推荐：`eval-cheap-module-source-map`，根据我们上面的描述，翻译过来就是不会生成 source map 文件，而是将 source map 以 base64 编码的形式添加到 eval 函数中、只精确到列、存在 loader 时，可准确定位源码。
