@@ -1067,7 +1067,7 @@ module.exports = () => {
 pnpm add -D speed-measure-webpack-plugin
 ```
 
-由于我们不需要每次都统计构建耗时，所以我们在新增一个 webpack.speedMeasure.js 专门用来统计耗时，同时增加我们的 script：
+由于我们不需要每次构建都统计构建耗时，所以我们在新增一个 webpack.speedMeasure.js 专门用来统计耗时，同时增加我们的 script：
 
 webpack.speedMeasure.js
 
@@ -1168,3 +1168,47 @@ module.exports = (env) => {
 ```
 
 我们来对比一下优化前后的构建时间，优化前的时间为 9762ms，优化后的时间为 7128ms，由于我们目前所使用三方库比较少，实际项目中效果会更加明显。
+
+### 精确使用 loader/plugin
+
+每个额外的 loader/plugin 都有其启动时间。尽量少地使用工具。比如使用 less-loader 来解析 css 文件，由于我们目前没有使用 less，所以我们从 ts/tsx 来下手。按照我们目前的配置，@babel/preset-react 也会处理 ts 文件，由于 ts 文件中不能写 jsx 语法，所以这就像是用 less-loader 解析 css，我们修改一下配置。
+
+webpack.config.js
+
+```javascript
+module.exports = (env) => {
+  return {
+    // ...
+    module: {
+      rules: [
+        {
+          test: /\.ts$/i,
+          loader: "babel-loader",
+          include: /src/,
+          options: {
+            presets: ["@babel/preset-env", "@babel/preset-typescript"],
+            plugins: [
+              DEVELOPMENT_ENV && require.resolve("react-refresh/babel")
+            ].filter(Boolean)
+          }
+        },
+        {
+          test: /\.tsx$/i,
+          loader: "babel-loader",
+          include: /src/,
+          options: {
+            presets: [
+              "@babel/preset-env",
+              "@babel/preset-react",
+              "@babel/preset-typescript"
+            ],
+            plugins: [
+              DEVELOPMENT_ENV && require.resolve("react-refresh/babel")
+            ].filter(Boolean)
+          }
+        }
+      ]
+    }
+  };
+};
+```

@@ -23,7 +23,18 @@ module.exports = (env) => {
     module: {
       rules: [
         {
-          test: /\.tsx?$/i,
+          test: /\.ts$/i,
+          loader: "babel-loader",
+          include: /src/,
+          options: {
+            presets: ["@babel/preset-env", "@babel/preset-typescript"],
+            plugins: [
+              DEVELOPMENT_ENV && require.resolve("react-refresh/babel")
+            ].filter(Boolean)
+          }
+        },
+        {
+          test: /\.tsx$/i,
           loader: "babel-loader",
           include: /src/,
           options: {
