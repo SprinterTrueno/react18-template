@@ -1,4 +1,6 @@
+const path = require("path");
 const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
+const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 const webpackConfig = require("./webpack.config");
 
 module.exports = (env) => {
@@ -16,6 +18,13 @@ module.exports = (env) => {
 
   const smpConfig = smp.wrap(config);
   smpConfig.plugins[MiniCssExtractPluginIndex] = MiniCssExtractPlugin;
+  smpConfig.plugins.push(
+    new BundleAnalyzerPlugin({
+      analyzerMode: "static",
+      openAnalyzer: false,
+      reportFilename: path.resolve(__dirname, "bundle-analyze-result.html")
+    })
+  );
 
   return smpConfig;
 };

@@ -55,6 +55,12 @@ module.exports = {
         // 允许使用 var require 语法来动态地导入模块。
         "@typescript-eslint/no-var-requires": "off"
       }
+    },
+    {
+      files: ["webpack.speedMeasure.js"],
+      rules: {
+        "import/no-extraneous-dependencies": "off"
+      }
     }
   ]
 };

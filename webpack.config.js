@@ -4,7 +4,6 @@ const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin"
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
-const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 
 module.exports = (env) => {
   const { NODE_ENV } = env;
@@ -76,12 +75,7 @@ module.exports = (env) => {
       PRODUCTION_ENV &&
         new MiniCssExtractPlugin({
           filename: "[name].[contenthash:8].css"
-        }),
-      new BundleAnalyzerPlugin({
-        analyzerMode: "static",
-        reportFilename: path.resolve(__dirname, "bundle-analyze-result.html"),
-        openAnalyzer: false
-      })
+        })
     ].filter(Boolean),
     optimization: {
       minimizer: [

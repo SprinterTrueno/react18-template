@@ -1215,6 +1215,40 @@ module.exports = (env) => {
 };
 ```
 
+我们也不需要每次构建都分析构建结果，只有我们需要分析的时候使用 BundleAnalyzerPlugin 就足够了，我们可以把它迁移到 webpack.speedMeasure.js 中：
+
+webpack.speedMeasure.js
+
+```javascript
+const path = require("path");
+const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
+const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
+const webpackConfig = require("./webpack.config");
+
+module.exports = (env) => {
+  const smp = new SpeedMeasurePlugin();
+  const config = webpackConfig(env);
+
+  const MiniCssExtractPluginIndex = config.plugins.findIndex((item) => {
+    return item.constructor.name === "MiniCssExtractPlugin";
+  });
+  const MiniCssExtractPlugin = config.plugins[MiniCssExtractPluginIndex];
+
+  const smpConfig = smp.wrap(config);
+  smpConfig.plugins[MiniCssExtractPluginIndex] = MiniCssExtractPlugin;
+  smpConfig.plugins.push(
+    new BundleAnalyzerPlugin({
+      analyzerMode: "static",
+      reportFilename: path.resolve(__dirname, "bundle-analyze-result.html")
+    })
+  );
+
+  return smpConfig;
+};
+```
+
+记得删掉 webpack.config.js 中的 BundleAnalyzerPlugin。
+
 ### devtool
 
 不同的 devtool 设置会导致性能差异。对于开发环境，通常希望更快速的 source map，需要添加到 bundle 中以增加体积为代价，但是对于生产环境，则希望更精准的 source map，需要从 bundle 中分离并独立存在。
