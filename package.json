@@ -1,13 +1,13 @@
 {
-  "name": "react-template",
+  "name": "react18-template",
   "version": "1.0.0",
-  "description": "React项目模板",
+  "description": "React18 项目模板",
   "private": true,
   "scripts": {
     "start": "webpack serve --env NODE_ENV=development",
     "build": "webpack --env NODE_ENV=production",
     "speedMeasure": "webpack --config webpack.speedMeasure.js --env NODE_ENV=production",
-    "tree": "treee -I node_modules"
+    "tree": "treee -a -I \".idea|.git|node_modules|dist\""
   },
   "dependencies": {
     "react": "^18.2.0",
@@ -19,8 +19,8 @@
     "@babel/preset-react": "^7.24.1",
     "@babel/preset-typescript": "^7.24.1",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.11",
-    "@types/node": "^20.12.2",
-    "@types/react": "^18.2.73",
+    "@types/node": "^20.12.3",
+    "@types/react": "^18.2.74",
     "@types/react-dom": "^18.2.23",
     "@typescript-eslint/eslint-plugin": "^7.5.0",
     "@typescript-eslint/parser": "^7.5.0",

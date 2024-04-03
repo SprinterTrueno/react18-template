@@ -1,6 +1,6 @@
-# react-template
+# react18-template
 
-React 项目模板
+React18 项目模板
 
 ## 一、前言
 
