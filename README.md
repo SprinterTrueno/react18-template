@@ -1239,3 +1239,143 @@ devtool 的命名规则为 `/^(inline-|hidden-|eval-)?(nosources-)?(cheap-(modul
   - nosources-source-map：会生成 source map，但是生成的 source map 只有错误信息的提示，不会生成源代码文件， 会在控制台告诉错误的内容及文件，但是点击文件名的时候看不到源码。
 
 开发环境推荐：`eval-cheap-module-source-map`，根据我们上面的描述，翻译过来就是不会生成 source map 文件，而是将 source map 以 base64 编码的形式添加到 eval 函数中、只精确到列、存在 loader 时，可准确定位源码。
+
+## 九、代码质量与代码风格
+
+### ESLint
+
+ESLint 是一个可配置的 JavaScript 检查器。它可以帮助你发现并修复 JavaScript 代码中的问题。问题可以指潜在的运行时漏洞、未使用最佳实践、风格问题等。
+
+老样子，我们先安装 ESLint：
+
+```shell
+pnpm add -D eslint
+```
+
+#### 配置文件
+
+PS：在 ESLint v9.0.0 将过渡到新的配置系统，所以我们目前写的都是基于 v8.x 版本的，至于 v9.x 版本，等出来了再更新吧！
+
+要想让 ESLint 正常工作，我们还需要一个配置文件。ESLint 配置文件是指项目中存储 ESLint 配置的地方。可以包括内置规则、想要强制执行的内容、具有自定义规则的插件、可共享的配置，你希望规则适用于哪些文件等等。
+
+使用配置文件有两种方式，第一种使用配置文件的方式是使用 .eslintrc.\* 和 package.json 文件。ESLint 会自动要检查文件的目录中寻找它们，并在其直系父目录中寻找，直到文件系统的根目录（/）、当前用户的主目录（~/）或指定 root: true 时停止。第二种方法是把文件保存在你想保存的地方，然后用 --config 选项把它的位置传给 CLI，例如：
+
+```shell
+eslint -c myconfig.json myfiletotest.js
+```
+
+大多数情况下，我们的项目中只会存在一个配置文件，我们在跟目录下新建一个名为 `.eslintrc.js.bak` 的配置文件即可。如果需要多配置文件，请参考[级联和层次结构](https://zh-hans.eslint.org/docs/latest/use/configure/configuration-files#%E7%BA%A7%E8%81%94%E5%92%8C%E5%B1%82%E6%AC%A1%E7%BB%93%E6%9E%84)。
+
+.eslintrc.js.bak
+
+```javascript
+module.exports = {
+  root: true
+};
+```
+
+#### 配置语言选项
+
+JavaScript 生态中有多个运行时、版本、扩展和框架。每个所支持的语法和全局变量都不尽相同。ESLint 会让你指定项目中 JavaScript 所使用的[语言选项](https://zh-hans.eslint.org/docs/latest/use/configure/language-options#%E6%8C%87%E5%AE%9A%E7%8E%AF%E5%A2%83)。你也可以在项目中使用插件扩展 ESLint 支持的语言选项。
+
+.eslintrc.js.bak
+
+```javascript
+module.exports = {
+  // ...
+  env: {
+    browser: true,
+    es2024: true
+  }
+};
+```
+
+#### 配置规则
+
+规则是 ESLint 的核心构建模块。规则验证你的代码是否符合某个期望，以及如果不符合该期望该怎么做。规则还可以包含针对该规则的额外配置选项。
+
+ESLint 有大量的[内置规则](https://zh-hans.eslint.org/docs/latest/rules/)，你可以通过插件添加更多规则。你也可以通过配置注释或配置文件来修改你的项目使用哪些规则。
+
+要在配置文件中配置规则，请使用 rules 键和一个错误级别以及任何你想使用的选项。比如现在 ESLint 默认不允许使用双引号并且数组或对象尾部要加逗号，我们不想这么做，可以这样配置：
+
+.eslintrc.js.bak
+
+```javascript
+module.exports = {
+  rules: {
+    quotes: ["error", "double"],
+    "comma-dangle": ["error", "never"]
+  }
+};
+```
+
+#### 扩展配置文件
+
+规则还可以包含针对该规则的额外配置项。ESLint 包括数百个可以使用的内置规则。此外你也可以创建自定义规则或使用别人用插件创建的规则。比如可共享配置 `eslint-config-airbnb` 就实现了受欢迎的 Airbnb JavaScript 风格指南。
+
+```shell
+pnpm add -D eslint-config-airbnb eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react eslint-plugin-react-hooks
+```
+
+.eslintrc.js.bak
+
+```javascript
+module.exports = {
+  // ...
+  extends: ["airbnb", "plugin:react-hooks/recommended"]
+};
+```
+
+由于我们使用 TS 开发，我们再加上一些有关 TS 的扩展：
+
+```shell
+pnpm add -D @typescript-eslint/parser @typescript-eslint/eslint-plugin typescript
+```
+
+PS：这里安装 typescript 是因为`@typescript-eslint/parser` 和 `@typescript-eslint/eslint-plugin` peer `typescript`。
+
+.eslintrc.js.bak
+
+```javascript
+module.exports = {
+  // ...
+  extends: [
+    "airbnb",
+    "plugin:react-hooks/recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  parser: "@typescript-eslint/parser"
+};
+```
+
+#### 正确解析模块路径
+
+在大型项目中，模块可能分布在多个目录和子目录中，而且可能使用了别名（alias）或特定的解析规则。没有适当的解析器配置，ESLint 可能无法正确识别这些模块的路径，从而导致错误的警告或错误。
+
+配置 import/resolver 通常需要在 ESLint 配置文件中指定解析器的类型和任何必要的选项。由于我们在使用 Webpack，所以需要 ESLint 能够理解 Webpack 的别名和模块解析规则，我们需要安装相应的解析器插件：
+
+```shell
+pnpm add -D eslint-import-resolver-webpack
+```
+
+然后修改配置文件：
+
+.eslintrc.js.bak
+
+```javascript
+module.exports = {
+  // ...
+  settings: {
+    "import/resolver": {
+      webpack: {
+        // 这里的 config 就是我们webpack配置文件中的 resolve。
+        // 如果你的 webpack.config.js 导出的不是一个函数而是一个对象，
+        // 你可以直接写 config: 'webpack.config.js'。
+        config: webpackConfig("development")
+      }
+    }
+  }
+};
+```
+
+至此，我们已经初步配置好了 ESLint，大家可以根据自己的需求修改相关的规则。
