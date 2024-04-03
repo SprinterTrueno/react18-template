@@ -1378,4 +1378,25 @@ module.exports = {
 };
 ```
 
-至此，我们已经初步配置好了 ESLint，大家可以根据自己的需求修改相关的规则。
+至此，我们已经初步配置好了 ESLint，大家可以根据自己的需求修改相关的规则。此刻你的项目看起来应该如下：
+
+```text
+react-template
+├── .eslintrc.js
+├── README.md
+├── package.json
+├── pnpm-lock.yaml
+├── public
+│   └── index.html
+├── src
+│   ├── App.css
+│   ├── App.tsx
+│   ├── assets
+│   │   └── images
+│   │       └── doge.jpg
+│   ├── index.tsx
+│   └── react-app-env.d.ts
+├── tsconfig.json
+├── webpack.config.js
+└── webpack.speedMeasure.js
+```
