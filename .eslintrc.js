@@ -13,7 +13,8 @@ module.exports = {
   extends: [
     "airbnb",
     "plugin:react-hooks/recommended",
-    "plugin:@typescript-eslint/recommended"
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended"
   ],
   // 将 TypeScript 转换为与 ESTree 格式兼容的解析器，好可以在 ESLint 中使用。
   parser: "@typescript-eslint/parser",
@@ -27,16 +28,21 @@ module.exports = {
       }
     }
   },
+  ignorePatterns: ["react-app-env.d.ts"],
   rules: {
-    // todo 配置 prettier 之后删除
-    quotes: ["error", "double"],
-    "comma-dangle": ["error", "never"],
-    "operator-linebreak": "off",
-    "spaced-comment": "off",
-    "linebreak-style": "off",
-
     // 允许使用不必要的块语句。
     "arrow-body-style": "off",
+    // 允许以下文件类型在引入的时候不加扩展名。
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        js: "never",
+        jsx: "never",
+        ts: "never",
+        tsx: "never"
+      }
+    ],
     // 允许命名组件和默认导出组件都使用箭头函数
     "react/function-component-definition": [
       "error",

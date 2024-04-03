@@ -1298,9 +1298,9 @@ PS：在 ESLint v9.0.0 将过渡到新的配置系统，所以我们目前写的
 eslint -c myconfig.json myfiletotest.js
 ```
 
-大多数情况下，我们的项目中只会存在一个配置文件，我们在跟目录下新建一个名为 `.eslintrc.js.bak` 的配置文件即可。如果需要多配置文件，请参考[级联和层次结构](https://zh-hans.eslint.org/docs/latest/use/configure/configuration-files#%E7%BA%A7%E8%81%94%E5%92%8C%E5%B1%82%E6%AC%A1%E7%BB%93%E6%9E%84)。
+大多数情况下，我们的项目中只会存在一个配置文件，我们在跟目录下新建一个名为 `.eslintrc.js` 的配置文件即可。如果需要多配置文件，请参考[级联和层次结构](https://zh-hans.eslint.org/docs/latest/use/configure/configuration-files#%E7%BA%A7%E8%81%94%E5%92%8C%E5%B1%82%E6%AC%A1%E7%BB%93%E6%9E%84)。
 
-.eslintrc.js.bak
+.eslintrc.js
 
 ```javascript
 module.exports = {
@@ -1312,7 +1312,7 @@ module.exports = {
 
 JavaScript 生态中有多个运行时、版本、扩展和框架。每个所支持的语法和全局变量都不尽相同。ESLint 会让你指定项目中 JavaScript 所使用的[语言选项](https://zh-hans.eslint.org/docs/latest/use/configure/language-options#%E6%8C%87%E5%AE%9A%E7%8E%AF%E5%A2%83)。你也可以在项目中使用插件扩展 ESLint 支持的语言选项。
 
-.eslintrc.js.bak
+.eslintrc.js
 
 ```javascript
 module.exports = {
@@ -1332,7 +1332,7 @@ ESLint 有大量的[内置规则](https://zh-hans.eslint.org/docs/latest/rules/)
 
 要在配置文件中配置规则，请使用 rules 键和一个错误级别以及任何你想使用的选项。比如现在 ESLint 默认不允许使用双引号并且数组或对象尾部要加逗号，我们不想这么做，可以这样配置：
 
-.eslintrc.js.bak
+.eslintrc.js
 
 ```javascript
 module.exports = {
@@ -1351,7 +1351,7 @@ module.exports = {
 pnpm add -D eslint-config-airbnb eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react eslint-plugin-react-hooks
 ```
 
-.eslintrc.js.bak
+.eslintrc.js
 
 ```javascript
 module.exports = {
@@ -1368,7 +1368,7 @@ pnpm add -D @typescript-eslint/parser @typescript-eslint/eslint-plugin typescrip
 
 PS：这里安装 typescript 是因为`@typescript-eslint/parser` 和 `@typescript-eslint/eslint-plugin` peer `typescript`。
 
-.eslintrc.js.bak
+.eslintrc.js
 
 ```javascript
 module.exports = {
@@ -1394,7 +1394,7 @@ pnpm add -D eslint-import-resolver-webpack
 
 然后修改配置文件：
 
-.eslintrc.js.bak
+.eslintrc.js
 
 ```javascript
 module.exports = {
@@ -1434,3 +1434,50 @@ react-template
 ├── webpack.config.js
 └── webpack.speedMeasure.js
 ```
+
+### Prettier
+
+Prettier 是一个流行的代码格式化工具，它能够自动地格式化你的代码，让其符合预设的规则和风格。无论是 JavaScript、HTML、CSS、TypeScript 还是其他许多编程语言，Prettier 都提供了支持。
+
+我们先来安装 prettier：
+
+```shell
+pnpm add -D prettier
+```
+
+#### 配置文件
+
+与 ESLint 不同，配置文件对于 prettier 来讲不是必需的，但是我们可以根据自己的代码风格去修改默认规则。我们需要在跟目录下新建一个 .prettierrc.js 文件：
+
+.prettierrc.js
+
+```javascript
+module.exports = {
+  trailingComma: "none",
+  endOfLine: "lf"
+};
+```
+
+上述规则的意思是禁止在数组或者对象末尾加逗号，并且使用 Unix 风格的换行符(\n)。你也可以根据你喜欢的风格做调整或者添加[其他规则](https://prettier.io/docs/en/options)。
+
+#### 使用 prettier 接管样式
+
+还记得我们之前使用 ESLint 的时候，ESLint 提示了我们单双引号之类的代码风格错误吗？现在我们可以把这些错误交给 Prettier 来处理而不是 ESLint。要实现这个目的，我们需要将 Prettier 作为 ESLint 规则运行，并将差异报告为单个 ESLint 问题，然后关闭 ESLint 与 Prettier 冲突的规则。
+
+```shell
+pnpm add -D eslint-plugin-prettier eslint-config-prettier
+```
+
+然后修改 .eslintrc.js 文件：
+
+```javascript
+module.exports = {
+  // ...
+  extends: [
+    // ...
+    "plugin:prettier/recommended"
+  ]
+};
+```
+
+现在，我们可以删除 ESLint 中有关于代码风格的规则，现在 ESLint 会使用 Prettier 来解决代码风格相关的问题了。
