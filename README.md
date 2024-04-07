@@ -1481,3 +1481,118 @@ module.exports = {
 ```
 
 现在，我们可以删除 ESLint 中有关于代码风格的规则，现在 ESLint 会使用 Prettier 来解决代码风格相关的问题了。
+
+至此，我们已经初步配置好了 Prettier，大家可以根据自己的需求修改相关的规则。此刻你的项目看起来应该如下：
+
+```text
+react18-template
+├── .eslintrc.js
+├── .prettierrc.js
+├── README.md
+├── package.json
+├── pnpm-lock.yaml
+├── public
+│   └── index.html
+├── src
+│   ├── App.css
+│   ├── App.tsx
+│   ├── assets
+│   │   └── images
+│   │       └── doge.jpg
+│   ├── index.tsx
+│   └── react-app-env.d.ts
+├── tsconfig.json
+├── webpack.config.js
+└── webpack.speedMeasure.js
+```
+
+### Stylelint
+
+ESLint 只能检查 JavaScript 代码，那我们如何检查 CSS 语法错误呢？这里我们就要来使用 Stylelint 了。Stylelint 是一个 CSS 语法检查工具，可以检测到 CSS 语法错误，并且可以检测到 CSS 样式表中的错误。我们先来安装它：
+
+```shell
+pnpm add -D stylelint stylelint-config-standard
+```
+
+stylelint-config-standard 包含了一些[常用的规则](https://stylelint.io/user-guide/rules/)。我们可以使用它作为基础，并在此基础上进行构建。要想使用它，我们需要在根目录下新建一个 .stylelintrc.js 文件：
+
+.stylelintrc.js
+
+```javascript
+module.exports = {
+  extends: ["stylelint-config-standard"]
+};
+```
+
+这样 Stylelint 就可以使用 stylelint-config-standard 的规则了。
+
+### 属性排序
+
+Stylelint 默认不会对属性进行排序，如果你希望对属性进行排序（不是必须的，看个人喜好，你甚至可以不用 stylelint），你可以使用 stylelint-order 插件。
+
+```shell
+pnpm add -D stylelint-config-recess-order
+```
+
+.stylelintrc.js
+
+```javascript
+module.exports = {
+  extends: [
+    "stylelint-config-standard",
+    "stylelint-config-recess-order"
+  ]
+};
+```
+
+### 其他配置
+
+如果你正在使用 Less 等 CSS 预处理器或者 styled-components，你可以使用相应的插件来支持它们。我们以 less 和 styled-components 为例，安装插件：
+
+```shell
+pnpm add -D less less-loader postcss postcss-less styled-components postcss-styled-syntax postcss-styled-components
+```
+
+.stylelintrc.js
+
+```javascript
+module.exports = {
+  // ...
+  overrides: [
+    {
+      files: "**/*.less",
+      customSyntax: "postcss-less"
+    },
+    {
+      files: "**/*.ts",
+      customSyntax: "postcss-styled-syntax"
+      // customSyntax: "postcss-styled-components"
+    }
+  ]
+};
+```
+
+至此，我们已经初步配置好了 Stylelint，大家可以根据自己的需求修改相关的规则。此刻你的项目看起来应该如下：
+
+```text
+react18-template
+├── .eslintrc.js
+├── .prettierrc.js
+├── .stylelintrc.js
+├── README.md
+├── package.json
+├── pnpm-lock.yaml
+├── public
+│   └── index.html
+├── src
+│   ├── App.css
+│   ├── App.tsx
+│   ├── assets
+│   │   └── images
+│   │       └── doge.jpg
+│   ├── index.tsx
+│   └── react-app-env.d.ts
+├── tsconfig.json
+├── webpack.config.js
+└── webpack.speedMeasure.js
+```

@@ -55,6 +55,14 @@ module.exports = (env) => {
           ]
         },
         {
+          test: /\.less$/i,
+          use: [
+            DEVELOPMENT_ENV ? "style-loader" : MiniCssExtractPlugin.loader,
+            "css-loader",
+            "less-loader"
+          ]
+        },
+        {
           test: /\.(jpe?g|png|gif|svg|bpm)$/i,
           type: "asset"
         }
@@ -81,7 +89,7 @@ module.exports = (env) => {
       minimizer: [
         new CssMinimizerPlugin(),
         new TerserPlugin({
-          /*// 多线程，默认值为 true：os.cpus().length - 1。
+          /* // 多线程，默认值为 true：os.cpus().length - 1。
           parallel: true,
           // 提取注释，默认值为 true，这将提取所有注释，将其保存在名为 LICENSE.txt 的文件中，设置为 false 则不提取注释。
           extractComments: true,
@@ -90,7 +98,7 @@ module.exports = (env) => {
               // 禁用控制台输出
               drop_console: true
             }
-          }*/
+          } */
         })
       ],
       splitChunks: {
