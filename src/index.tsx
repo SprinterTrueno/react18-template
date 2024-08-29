@@ -4,6 +4,7 @@ import { ConfigProvider } from "antd";
 import zhCN from "antd/es/locale/zh_CN";
 import router from "./router";
 import "dayjs/locale/zh-cn";
+import "normalize.css";
 
 const root = createRoot(document.getElementById("root"));
 
