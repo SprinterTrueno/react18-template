@@ -89,7 +89,6 @@ module.exports = (env) => {
               options: {
                 modules: {
                   auto: true,
-                  // exportLocalsConvention: "camelCaseOnly",
                   localIdentName: "[local]__[hash:base64:5]",
                   namedExport: false,
                 },
