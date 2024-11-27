@@ -1,15 +1,20 @@
 import { FallbackProps } from "react-error-boundary";
+import { Button, Result } from "antd";
 
 const Fallback = (props: FallbackProps) => {
   const { error, resetErrorBoundary } = props;
 
-  // Call resetErrorBoundary() to reset the error boundary and retry the render.
-
   return (
-    <div role="alert">
-      <p>Something went wrong:</p>
-      <pre style={{ color: "red" }}>{error.message}</pre>
-    </div>
+    <Result
+      status="error"
+      title="Something went wrong"
+      subTitle={error.message}
+      extra={
+        <Button type="primary" onClick={resetErrorBoundary}>
+          Try again
+        </Button>
+      }
+    />
   );
 };
 
