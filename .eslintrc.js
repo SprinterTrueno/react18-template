@@ -36,6 +36,8 @@ module.exports = {
       "ignorePackages",
       { js: "never", jsx: "never", ts: "never", tsx: "never" },
     ],
+    "no-shadow": "off",
+    "no-use-before-define": "off",
     // 指定命名函数组件的定义风格为箭头函数。
     "react/function-component-definition": [
       "error",
@@ -43,8 +45,10 @@ module.exports = {
     ],
     // 允许包含 JSX 的文件扩展名。
     "react/jsx-filename-extension": ["error", { extensions: ["tsx"] }],
+    "react/jsx-props-no-spreading": "off",
     // 使用 JSX 时允许缺少 React。
     "react/react-in-jsx-scope": "off",
+    "@typescript-eslint/no-explicit-any": "off",
     // 使用未使用的变量进行警告。
     "@typescript-eslint/no-unused-vars": "warn",
   },
